@@ -89,14 +89,37 @@
     ol.steps li { margin: 4px 0; }
     code { background: rgba(235,227,213,.07); padding: 1px 6px; font: 12.5px var(--f-mono); }
     .hidden { display: none; }
+    .start { background: rgba(255,140,50,.05); box-shadow: inset 0 0 0 1px rgba(255,154,61,.45); }
+    .start .steps { font-size: 15.5px; color: var(--bone); }
+    .start .steps li { margin: 8px 0; }
+    .start .steps strong { color: var(--amber-hi); font-weight: 600; }
+    .btn.big { min-height: 54px; padding: 12px 24px; font-size: 13.5px; }
+    #startStatus { margin: 8px 0 4px; padding: 12px 14px; font-size: 15px; }
+    #startStatus.ok { background: rgba(143,224,176,.07); border-left: 2px solid var(--ok); }
+    #startStatus.bad { background: rgba(255,127,97,.08); border-left: 2px solid var(--err); color: var(--bone); }
+    #startStatus.warn { background: rgba(255,154,61,.08); border-left: 2px solid var(--amber); color: var(--bone); }
+    #startStatus strong { color: var(--err); }
   </style>
 </head>
 <body>
 <div class="wrap">
   <div class="bar"><span>OB / Builder</span><span id="tripBar"></span></div>
   <h1>Operation Bucharest · Builder</h1>
-  <p class="lead">Skriv de fem navne og giv hver person en kode. Rækkefølgen bestemmer, hvem der er person 1–5, og dermed hvilken kategori de har hver dag. Byg derefter <code>data.js</code> og læg den på GitHub ved siden af <code>index.html</code>.</p>
+  <section class="card start" id="startCard" style="margin-top:18px">
+    <h2>Sådan gør du</h2>
+    <p class="status" id="startStatus" role="status"></p>
+    <ol class="steps">
+      <li>Tjek navnene herunder. Rækkefølgen er person 1–5.</li>
+      <li>Tryk <strong>Byg og hent data.js</strong>.</li>
+      <li>Upload filen på GitHub: <em>Add file → Upload files</em>, vælg <code>data.js</code>, og tryk <em>Commit changes</em>.</li>
+    </ol>
+    <div class="row" style="margin-top:16px"><button class="btn primary big" id="buildBtn">Byg og hent data.js</button></div>
+    <p class="status" id="buildStatus" role="status"></p>
+  </section>
+
+  <p class="lead" style="margin-top:24px">Skriv de fem navne og giv hver person en kode. Rækkefølgen bestemmer, hvem der er person 1–5, og dermed hvilken kategori de har hver dag. Byg derefter <code>data.js</code> og læg den på GitHub ved siden af <code>index.html</code>.</p>
   <p class="note"><strong>Hold koderne private.</strong> Alt sker i din browser, og intet sendes nogen steder. Kun <code>data.js</code> skal på GitHub – den er krypteret. Din opsætningsfil (.json) og kodelisten indeholder koderne i klartekst og må ikke ligge i repoet.</p>
+
 
   <section class="card">
     <h2>Personer</h2>
@@ -111,14 +134,12 @@
   </section>
 
   <section class="card">
-    <h2>Byg og eksportér</h2>
-    <p class="sub">Krypterer hver persons navn og nummer med deres egen kode (PBKDF2-SHA256 + AES-GCM). Uden koden kan ingen læse noget i filen.</p>
+    <h2>Filen og koderne</h2>
+    <p class="sub">data.js krypterer hver persons navn og nummer med deres egen kode (PBKDF2-SHA256 + AES-GCM). Uden koden kan ingen læse noget i filen.</p>
     <div class="row">
-      <button class="btn primary" id="buildBtn">Byg data.js</button>
-      <button class="btn" id="dlData" disabled>Hent data.js</button>
+      <button class="btn" id="dlData" disabled>Hent data.js igen</button>
       <button class="btn" id="copyData" disabled>Kopiér indhold</button>
     </div>
-    <p class="status" id="buildStatus" role="status"></p>
     <textarea class="out hidden" id="dataOut" readonly aria-label="Indhold af data.js"></textarea>
 
     <div class="grid2" style="margin-top:18px">
@@ -150,11 +171,7 @@
       <button class="btn danger" id="resetBtn">Start forfra</button>
     </div>
     <p class="status" id="setupStatus" role="status"></p>
-    <ol class="steps">
-      <li>Byg <code>data.js</code> og hent filen.</li>
-      <li>Gå til dit repo på GitHub, vælg <em>Add file → Upload files</em> og upload den nye <code>data.js</code> (den erstatter den gamle).</li>
-      <li>Vent et minuts tid, og genindlæs hjulet. Koder, der ikke er med i den nye fil, holder op med at virke.</li>
-    </ol>
+    <p class="sub" style="margin:12px 0 0">Efter upload: vent et minuts tid, og genindlæs hjulet. Koder, der ikke er med i den nye fil, holder op med at virke.</p>
   </section>
 </div>
 
@@ -191,10 +208,11 @@
     return { people, dropped: Math.max(0, list.length - P), old: !Array.isArray(s.people) };
   }
 
-  let state, built = null, loadedNote = '';
+  // source: where the names and codes came from: 'old' (old builder draft), 'saved' (this builder), 'file', 'fresh' (Start forfra), 'none'
+  let state, built = null, loadedNote = '', source = 'none';
   try {
     const m = migrate(JSON.parse(localStorage.getItem(DRAFT_KEY)));
-    if (m) { state = { people: m.people }; if (m.old) loadedNote = `Udkast fra den gamle builder indlæst: navne, koder og rækkefølge er bevaret, felter og odds er droppet${m.dropped ? `, og ${m.dropped} ekstra ${m.dropped === 1 ? 'person' : 'personer'} er fjernet (kun de første fem er med)` : ''}.`; }
+    if (m) { state = { people: m.people }; source = m.old ? 'old' : 'saved'; if (m.old) loadedNote = `Udkast fra den gamle builder indlæst: navne, koder og rækkefølge er bevaret, felter og odds er droppet${m.dropped ? `, og ${m.dropped} ekstra ${m.dropped === 1 ? 'person' : 'personer'} er fjernet (kun de første fem er med)` : ''}.`; }
   } catch (e) {}
   if (!state) state = defaults();
 
@@ -295,10 +313,21 @@
     return crypto.subtle.deriveKey({ name: 'PBKDF2', salt, iterations: iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, [usage]);
   }
 
+  const BUILD_LABEL = 'Byg og hent data.js';
+  let armT = 0;
   $('buildBtn').onclick = async () => {
+    const btn = $('buildBtn');
     if (!window.crypto || !crypto.subtle) { setStatus('buildStatus', 'Din browser tillader ikke kryptering her. Åbn siden via https eller localhost i Chrome, Edge, Firefox eller Safari.', 'bad'); return; }
     if (checkCodes()) { setStatus('buildStatus', 'Kan ikke bygge endnu: ret kodefejlene.', 'bad'); return; }
-    const btn = $('buildBtn'); btn.disabled = true; btn.textContent = 'Bygger…';
+    // No names/codes found from last time: building now would give everyone new codes, so ask twice
+    if (source === 'none' && !btn.dataset.armed) {
+      btn.dataset.armed = '1'; btn.textContent = 'Tryk igen: byg med nye koder';
+      setStatus('buildStatus', 'Pas på: koderne herunder er nye. Dine venners gamle koder holder op med at virke.', 'bad');
+      clearTimeout(armT); armT = setTimeout(() => { delete btn.dataset.armed; btn.textContent = BUILD_LABEL; }, 5000);
+      return;
+    }
+    clearTimeout(armT); delete btn.dataset.armed;
+    btn.disabled = true; btn.textContent = 'Bygger…';
     try {
       const salt = crypto.getRandomValues(new Uint8Array(16));
       const entries = [];
@@ -318,11 +347,24 @@
       built = { data, text: `/* Operation Bucharest – krypterede data (navn + personnummer pr. kode), bygget ${stamp}. Rediger ikke i hånden: brug builder.html. */\nwindow.OB_DATA = ${JSON.stringify(data)};\n` };
       $('dataOut').value = built.text; $('dataOut').classList.remove('hidden');
       $('dlData').disabled = $('copyData').disabled = $('testBtn').disabled = false;
-      setStatus('buildStatus', `Bygget: ${entries.length} koder. Hent filen og upload den til GitHub.`, 'ok');
+      download('data.js', built.text, 'text/javascript');
+      setStatus('buildStatus', `Færdig: data.js med ${entries.length} koder er hentet. Næste: upload den på GitHub (trin 3).`, 'ok');
     } catch (e) {
       setStatus('buildStatus', 'Noget gik galt under bygningen: ' + e.message, 'bad');
-    } finally { btn.disabled = false; btn.textContent = 'Byg data.js'; }
+    } finally { btn.disabled = false; btn.textContent = BUILD_LABEL; }
   };
+
+  function renderStart() {
+    const el = $('startStatus');
+    const msg = {
+      old: ['ok', 'Fandt dine navne og koder fra sidst i denne browser. Dine venner beholder deres koder.'],
+      saved: ['ok', 'Fandt dine gemte navne og koder i denne browser.'],
+      file: ['ok', 'Navne og koder er indlæst fra din fil.'],
+      fresh: ['warn', 'Alle har fået nye koder. Husk at sende hver person deres nye kode (se Kodeliste længere nede).'],
+      none: ['bad', '<strong>Fandt ingen navne og koder fra sidst i denne browser.</strong> Åbn siden i den browser, du brugte sidst. Eller tryk «Indlæs opsætning» nederst og vælg din .json-fil. Bygger du med koderne herunder, får alle nye koder.']
+    }[source];
+    el.innerHTML = msg[1]; el.className = 'status ' + msg[0];
+  }
 
   function download(fname, text, type) {
     const a = document.createElement('a');
@@ -364,7 +406,7 @@
     try {
       const m = migrate(JSON.parse(await f.text()));
       if (!m) throw new Error('forkert format');
-      state = { people: m.people };
+      state = { people: m.people }; source = 'file'; renderStart();
       render(); persist();
       setStatus('setupStatus', m.old
         ? `Indlæst fra den gamle builder: navne, koder og rækkefølge er bevaret, felter og odds er droppet${m.dropped ? ` (${m.dropped} ekstra fjernet – kun de første fem er med)` : ''}.`
@@ -379,12 +421,13 @@
       return;
     }
     delete this.dataset.armed; this.textContent = 'Start forfra';
-    state = defaults(); render(); persist();
+    state = defaults(); source = 'fresh'; renderStart(); render(); persist();
     setStatus('setupStatus', 'Nulstillet med nye koder.', 'ok');
   };
   document.querySelector('label[for="loadSetup"]').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('loadSetup').click(); } });
 
   render();
+  renderStart();
   if (loadedNote) { setStatus('setupStatus', loadedNote, 'ok'); persist(); }
 }
 </script>
