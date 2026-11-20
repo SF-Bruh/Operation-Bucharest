@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Bucharest">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Operation Bucharest</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* VOICE: Bajer-projektet's premium dark and gold, with a members-only mission feel
+       IDEA: a casino prize wheel in a private lounge
+       PICTURE: the wheel itself, large, with a lit gold rim and a flapping pointer
+       COLOUR and TYPE: near-black ground, gold gradients; Playfair Display + Inter
+       LAYOUT: one screen at a time; code login, then the wheel, result in a bottom sheet */
+    :root {
+      --gold: #d4af37; --gold-light: #f4d03f; --gold-dark: #b8860b;
+      --bg: #0a0a0f; --text: #fff;
+      --text-sub: rgba(255,255,255,.65); --text-muted: rgba(255,255,255,.4);
+      --border: rgba(212,175,55,.22); --glass: rgba(255,255,255,.055); --glass-border: rgba(255,255,255,.1);
+      --err: #ff6b72;
+      --wsize: min(90vw, 56vh, 440px);
+      color-scheme: dark;
+    }
+    @supports (height: 100dvh) { :root { --wsize: min(90vw, 56dvh, 440px); } }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%; overflow: hidden; background: var(--bg); color: var(--text);
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
+      user-select: none; -webkit-user-select: none; touch-action: manipulation;
+    }
+    input { user-select: text; -webkit-user-select: text; }
+    button { font-family: inherit; }
+    button:focus-visible, input:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }
+
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 10%, rgba(212,175,55,.09) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 60% at 80% 90%, rgba(212,175,55,.06) 0%, transparent 70%);
+      animation: glowShift 18s ease-in-out infinite alternate;
+    }
+    @keyframes glowShift { to { opacity: .8; transform: scale(1.08) translate(1%, 1.5%); } }
+
+    /* ── Screens (same motion as Bajer) ── */
+    .screens { position: fixed; inset: 0; z-index: 1; }
+    .screen {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      padding: calc(24px + env(safe-area-inset-top)) 24px calc(24px + env(safe-area-inset-bottom));
+      transform: translateX(100%); opacity: 0; pointer-events: none; will-change: transform, opacity;
+    }
+    .screen.slide-in { transition: transform .5s cubic-bezier(.32,.72,0,1), opacity .5s cubic-bezier(.32,.72,0,1); transform: translateX(0); opacity: 1; pointer-events: auto; }
+    .screen.slide-out-left { transition: transform .4s cubic-bezier(.4,0,.6,1), opacity .4s; transform: translateX(-30%); opacity: 0; }
+    .screen.slide-out-right { transition: transform .4s cubic-bezier(.4,0,.6,1), opacity .4s; transform: translateX(100%); opacity: 0; }
+    .screen.enter-from-left { transform: translateX(-30%); opacity: 0; }
+    .screen-top { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; max-width: 380px; margin: 0 auto; width: 100%; }
+    .screen-bottom { max-width: 380px; margin: 0 auto; width: 100%; padding-top: 16px; }
+    .screen.slide-in .screen-top > *, .screen.slide-in .screen-bottom > * { animation: fadeUp .5s cubic-bezier(.22,.68,0,1.1) both; }
+    .screen.slide-in .screen-top > *:nth-child(2) { animation-delay: .06s; }
+    .screen.slide-in .screen-top > *:nth-child(3) { animation-delay: .12s; }
+    .screen.slide-in .screen-top > *:nth-child(4) { animation-delay: .18s; }
+    .screen.slide-in .screen-top > *:nth-child(5) { animation-delay: .24s; }
+    .screen.slide-in .screen-bottom > * { animation-delay: .3s; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+    /* ── Login ── */
+    .kicker { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 18px; }
+    .icon {
+      width: 76px; height: 76px; border-radius: 50%; margin-bottom: 22px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 32px rgba(212,175,55,.3);
+    }
+    .icon svg { width: 46px; height: 46px; animation: idleSpin 14s linear infinite; }
+    @keyframes idleSpin { to { transform: rotate(360deg); } }
+    .title {
+      font-family: 'Playfair Display', serif; font-size: clamp(30px, 9vw, 36px); font-weight: 600; line-height: 1.1; margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff 0%, var(--gold-light) 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      text-wrap: balance;
+    }
+    .subtitle { font-size: 16px; color: var(--text-sub); margin-bottom: 30px; line-height: 1.5; max-width: 300px; }
+    .field {
+      width: 100%; padding: 18px 20px; font-size: 26px; font-weight: 600; letter-spacing: 3px;
+      font-family: 'Inter', sans-serif; text-align: center; text-transform: uppercase;
+      background: var(--glass); border: 2px solid var(--border); border-radius: 20px; color: var(--text);
+      outline: none; transition: all .25s cubic-bezier(.4,0,.2,1); -webkit-appearance: none;
+    }
+    .field::placeholder { color: var(--text-muted); font-weight: 400; letter-spacing: 3px; }
+    .field:focus { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212,175,55,.12), 0 8px 32px rgba(212,175,55,.15); background: rgba(255,255,255,.06); }
+    .field.invalid { border-color: var(--err); box-shadow: 0 0 0 4px rgba(255,107,114,.15); animation: shake .5s ease; }
+    .err { color: var(--err); font-size: 14px; margin-top: 14px; min-height: 20px; opacity: 0; transition: opacity .2s; }
+    .err.show { opacity: 1; }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-8px); } 40%,80% { transform: translateX(8px); } }
+    .a2hs { margin-top: 14px; font-size: 13px; color: var(--text-muted); text-align: center; line-height: 1.5; display: none; }
+    .a2hs.show { display: block; }
+
+    /* ── Buttons ── */
+    .btn {
+      font-weight: 600; font-size: 18px; border: none; border-radius: 16px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; width: 100%; min-height: 58px; padding: 16px 24px;
+      -webkit-appearance: none; transition: transform .15s cubic-bezier(.4,0,.2,1), box-shadow .15s, opacity .2s;
+    }
+    .btn:active { transform: scale(.97); }
+    .btn:disabled { opacity: .45; cursor: default; transform: none; }
+    .btn-gold { background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); color: var(--bg); box-shadow: 0 6px 24px rgba(212,175,55,.35); }
+    .btn-share {
+      flex: none; width: 58px; min-height: 58px; border-radius: 16px; cursor: pointer;
+      background: var(--glass); border: 2px solid var(--glass-border); color: var(--text-sub);
+      display: flex; align-items: center; justify-content: center; transition: all .2s;
+    }
+    .btn-share:active { background: rgba(212,175,55,.15); border-color: var(--gold); color: var(--gold); transform: scale(.95); }
+    .icon-btn {
+      width: 44px; height: 44px; border-radius: 14px; cursor: pointer;
+      background: var(--glass); border: 1.5px solid var(--glass-border); color: var(--text-sub);
+      display: inline-flex; align-items: center; justify-content: center; transition: all .2s;
+    }
+    .icon-btn:active { border-color: var(--gold); color: var(--gold); transform: scale(.95); }
+
+    /* ── Wheel screen ── */
+    .wheel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; max-width: 420px; width: 100%; margin: 0 auto; }
+    .hello-sub { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px; }
+    .hello {
+      font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 600; line-height: 1.15;
+      background: linear-gradient(135deg, #fff 0%, var(--gold-light) 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .head-btns { display: flex; gap: 10px; flex: none; }
+    .wheel-area { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; padding-top: 18px; }
+    .stage { position: relative; width: var(--wsize); height: var(--wsize); flex: none; }
+    .ring {
+      position: absolute; inset: 0; border-radius: 50%;
+      background: conic-gradient(from 0deg, #f4d03f, #b8860b 25%, #f4d03f 50%, #b8860b 75%, #f4d03f);
+      box-shadow: 0 24px 70px rgba(0,0,0,.65), 0 0 80px rgba(212,175,55,.16), inset 0 0 0 1px rgba(255,255,255,.25);
+    }
+    .ring::after { content: ''; position: absolute; inset: 14px; border-radius: 50%; background: #07070b; box-shadow: inset 0 0 0 2px rgba(0,0,0,.6); }
+    #wheel { position: absolute; left: 16px; top: 16px; width: calc(100% - 32px); height: calc(100% - 32px); border-radius: 50%; will-change: transform; }
+    .bulb {
+      position: absolute; left: 50%; top: 50%; width: 7px; height: 7px; margin: -3.5px; border-radius: 50%;
+      background: #fff6d0; box-shadow: 0 0 6px 2px rgba(244,208,63,.55); opacity: .35;
+      transform: rotate(var(--a)) translateY(calc(var(--wsize) / -2 + 7px));
+    }
+    .bulb:nth-child(odd) { opacity: .95; }
+    .stage.spinning .bulb { animation: blink .32s steps(1) infinite; }
+    .stage.spinning .bulb:nth-child(odd) { animation-delay: .16s; }
+    .stage.won .bulb { animation: blink .16s steps(1) infinite; }
+    @keyframes blink { 0% { opacity: 1; } 50% { opacity: .2; } }
+    .pointer { position: absolute; left: 50%; top: -12px; width: 40px; height: 50px; margin-left: -20px; z-index: 3; filter: drop-shadow(0 6px 8px rgba(0,0,0,.55)); transform-origin: 50% 30%; }
+    .hub {
+      position: absolute; left: 50%; top: 50%; width: 24%; height: 24%; z-index: 2;
+      transform: translate(-50%, -50%); border-radius: 50%; border: none; cursor: pointer;
+      background: radial-gradient(circle at 35% 30%, #f9e27a, #d4af37 45%, #8f6a10);
+      color: var(--bg); font-weight: 800; font-size: clamp(14px, 4.2vw, 19px); letter-spacing: 1.5px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.45), 0 0 0 5px #0a0a0f, 0 0 0 7px rgba(212,175,55,.6);
+      transition: transform .15s;
+    }
+    .hub:active { transform: translate(-50%, -50%) scale(.94); }
+    .hub:disabled { cursor: default; }
+    .recent { text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 12px; min-height: 18px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .recent b { color: var(--text-sub); font-weight: 500; }
+
+    /* ── Result sheet ── */
+    .sheet-overlay { position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,.55); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); opacity: 0; pointer-events: none; transition: opacity .3s; }
+    .sheet-overlay.show { opacity: 1; pointer-events: auto; }
+    .sheet {
+      position: absolute; left: 0; right: 0; bottom: 0; max-width: 480px; margin: 0 auto; text-align: center;
+      background: linear-gradient(180deg, #1a1a24 0%, #0d0d12 100%); border-top: 1px solid var(--border); border-radius: 24px 24px 0 0;
+      padding: 14px 24px calc(22px + env(safe-area-inset-bottom));
+      transform: translateY(100%); transition: transform .45s cubic-bezier(.32,.72,0,1);
+    }
+    .sheet-overlay.show .sheet { transform: none; }
+    .sheet-handle { width: 36px; height: 5px; background: rgba(255,255,255,.25); border-radius: 3px; margin: 0 auto 18px; }
+    .res-kicker { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+    .res-who { font-size: 15px; color: var(--text-sub); }
+    .res-label {
+      font-family: 'Playfair Display', serif; font-size: clamp(30px, 9vw, 44px); font-weight: 700; line-height: 1.1;
+      margin: 8px 0 26px; overflow-wrap: anywhere; text-wrap: balance;
+      background: linear-gradient(135deg, #fff 0%, var(--gold-light) 60%, var(--gold) 100%);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .result-btn-row { display: flex; gap: 12px; }
+    .result-btn-row .btn { flex: 1; width: auto; }
+
+    /* ── Confetti + toast ── */
+    .confetti-wrap { position: fixed; left: 50%; top: 45%; z-index: 600; pointer-events: none; }
+    .confetti { position: absolute; width: 8px; height: 12px; border-radius: 2px; opacity: 0; }
+    .confetti.burst { animation: burst 1.5s cubic-bezier(.2,.7,.3,1) forwards; }
+    @keyframes burst { 0% { opacity: 1; transform: translate(0,0) rotate(0); } 100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); } }
+    .toast {
+      position: fixed; left: 50%; bottom: calc(28px + env(safe-area-inset-bottom)); z-index: 700; pointer-events: none;
+      transform: translate(-50%, 20px); opacity: 0; transition: all .3s;
+      background: #1a1a24; border: 1px solid var(--border); color: var(--text); padding: 12px 18px; border-radius: 14px; font-size: 14px; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bg-glow, .icon svg, .screen.slide-in .screen-top > *, .screen.slide-in .screen-bottom > * { animation: none; }
+      .stage.spinning .bulb, .stage.won .bulb { animation-duration: 1.2s; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="confetti-wrap" id="confetti"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="screens">
+    <!-- LOGIN -->
+    <section class="screen slide-in" id="s-login">
+      <div class="screen-top">
+        <div class="kicker">Kun for indviede</div>
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" stroke="#0a0a0f" stroke-width="3" stroke-linecap="round">
+            <circle cx="24" cy="24" r="19"/>
+            <path d="M24 5v38M5 24h38M10.6 10.6l26.8 26.8M37.4 10.6 10.6 37.4" stroke-width="2.2"/>
+            <circle cx="24" cy="24" r="5" fill="#0a0a0f"/>
+          </svg>
+        </div>
+        <h1 class="title">Operation Bucharest</h1>
+        <p class="subtitle">Indtast din personlige kode for at fortsætte</p>
+        <input class="field" id="code" type="text" placeholder="XXXX-XXXX" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" aria-label="Din kode">
+        <p class="err" id="codeErr" role="alert"></p>
+      </div>
+      <div class="screen-bottom">
+        <button class="btn btn-gold" id="unlockBtn">Lås op</button>
+        <p class="a2hs" id="a2hs">Tip: Tryk på Del og vælg «Føj til hjemmeskærm», så åbner den som en app.</p>
+      </div>
+    </section>
+
+    <!-- WHEEL -->
+    <section class="screen" id="s-wheel">
+      <header class="wheel-head">
+        <div style="min-width:0">
+          <div class="hello-sub">Operation Bucharest</div>
+          <div class="hello" id="hello">Hej</div>
+        </div>
+        <div class="head-btns">
+          <button class="icon-btn" id="soundBtn" aria-label="Lyd til eller fra"></button>
+          <button class="icon-btn" id="lockBtn" aria-label="Skift kode">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          </button>
+        </div>
+      </header>
+      <div class="wheel-area">
+        <div class="stage" id="stage">
+          <div class="ring"></div>
+          <div id="bulbs"></div>
+          <canvas id="wheel" aria-hidden="true"></canvas>
+          <svg class="pointer" id="pointer" viewBox="0 0 40 50" aria-hidden="true">
+            <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".45" stop-color="#d4af37"/><stop offset="1" stop-color="#8f6a10"/></linearGradient></defs>
+            <path d="M20 48 L5.5 21 A15.5 15.5 0 1 1 34.5 21 Z" fill="url(#pg)" stroke="#0a0a0f" stroke-width="2" stroke-linejoin="round"/>
+            <circle cx="20" cy="16" r="5" fill="#0a0a0f"/>
+          </svg>
+          <button class="hub" id="hub" aria-label="Spin hjulet">SPIN</button>
+        </div>
+      </div>
+      <div class="screen-bottom">
+        <button class="btn btn-gold" id="spinBtn">Spin hjulet</button>
+        <p class="recent" id="recent"></p>
+      </div>
+    </section>
+  </div>
+
+  <!-- RESULT -->
+  <div class="sheet-overlay" id="resultOverlay">
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="resLabel">
+      <div class="sheet-handle"></div>
+      <div class="res-kicker">Hjulet har talt</div>
+      <div class="res-who" id="resWho"></div>
+      <div class="res-label" id="resLabel"></div>
+      <div class="result-btn-row">
+        <button class="btn btn-gold" id="againBtn">Spin igen</button>
+        <button class="btn-share" id="shareBtn" aria-label="Del resultat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+  {
+    const $ = id => document.getElementById(id);
+    const store = {
+      get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+      set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
+      del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+    };
+    const KEY_CODE = 'ob_code', KEY_SOUND = 'ob_sound';
+    const DATA = window.OB_DATA;
+
+    function haptic(p = 10) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+    function rand() { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] / 4294967296; }
+
+    // ── Codes: each player's wheel is encrypted with their own code (PBKDF2 + AES-GCM) ──
+    const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+    const normCode = s => (s || '').normalize('NFC').toUpperCase().replace(/[^\p{L}\p{N}]/gu, '');
+    async function openCode(code) {
+      if (!DATA || !Array.isArray(DATA.entries)) throw new Error('nodata');
+      const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveKey']);
+      const key = await crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: b64(DATA.salt), iterations: DATA.iter, hash: 'SHA-256' },
+        base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+      for (const e of DATA.entries) {
+        try {
+          const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(e.iv) }, key, b64(e.ct));
+          return JSON.parse(new TextDecoder().decode(pt));
+        } catch (err) { /* not this entry */ }
+      }
+      return null;
+    }
+
+    // ── Sound (generated, no files needed) ──
+    let actx = null, master = null, noiseBuf = null;
+    let soundOn = store.get(KEY_SOUND) !== '0';
+    function audio() {
+      if (!soundOn) return null;
+      if (!actx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) {}
+        actx = new AC();
+        master = actx.createGain(); master.gain.value = .9; master.connect(actx.destination);
+        noiseBuf = actx.createBuffer(1, actx.sampleRate * .8, actx.sampleRate);
+        const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      }
+      if (actx.state === 'suspended') actx.resume().catch(() => {});
+      return actx;
+    }
+    function tone(freq, start, dur, type, vol) {
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.setValueAtTime(.0001, start);
+      g.gain.exponentialRampToValueAtTime(vol, start + .015);
+      g.gain.exponentialRampToValueAtTime(.0001, start + dur);
+      o.connect(g).connect(master); o.start(start); o.stop(start + dur + .02);
+    }
+    function tickSound() {
+      if (!soundOn || !actx) return;
+      const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'triangle';
+      o.frequency.setValueAtTime(1900, t); o.frequency.exponentialRampToValueAtTime(650, t + .03);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.2, t + .002); g.gain.exponentialRampToValueAtTime(.0001, t + .045);
+      o.connect(g).connect(master); o.start(t); o.stop(t + .05);
+    }
+    function whoosh() {
+      if (!audio()) return;
+      const t = actx.currentTime, src = actx.createBufferSource(), f = actx.createBiquadFilter(), g = actx.createGain();
+      src.buffer = noiseBuf; f.type = 'bandpass'; f.Q.value = 1.2;
+      f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(2600, t + .25); f.frequency.exponentialRampToValueAtTime(500, t + .75);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.35, t + .08); g.gain.exponentialRampToValueAtTime(.0001, t + .75);
+      src.connect(f).connect(g).connect(master); src.start(t); src.stop(t + .8);
+    }
+    function winSound() {
+      if (!soundOn || !actx) return;
+      const t = actx.currentTime + .02;
+      [523.25, 659.25, 783.99].forEach((f, i) => { tone(f, t + i * .11, .22, 'triangle', .3); tone(f * 2, t + i * .11, .18, 'sine', .08); });
+      [1046.5, 1318.5, 1568].forEach(f => tone(f, t + .36, .9, 'triangle', .16));
+      tone(523.25, t + .36, 1, 'sine', .18);
+    }
+    function unlockChime() {
+      if (!soundOn || !actx) return;
+      const t = actx.currentTime + .02;
+      tone(880, t, .16, 'sine', .22); tone(1318.5, t + .1, .35, 'sine', .2);
+    }
+    const ICON_ON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>';
+    const ICON_OFF = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m23 9-6 6M17 9l6 6"/></svg>';
+    function renderSoundBtn() { $('soundBtn').innerHTML = soundOn ? ICON_ON : ICON_OFF; $('soundBtn').setAttribute('aria-pressed', String(soundOn)); }
+
+    // ── Screens ──
+    let current = 'login';
+    function go(to, dir = 'forward') {
+      if (to === current) return;
+      const from = $('s-' + current), next = $('s-' + to);
+      from.classList.remove('slide-in');
+      from.classList.add(dir === 'forward' ? 'slide-out-left' : 'slide-out-right');
+      next.classList.remove('slide-out-left', 'slide-out-right', 'enter-from-left');
+      if (dir === 'back') next.classList.add('enter-from-left');
+      void next.offsetWidth;
+      next.classList.remove('enter-from-left');
+      next.classList.add('slide-in');
+      current = to;
+    }
+
+    // ── Wheel state ──
+    let player = null, slices = [], weights = [], N = 0, SEG = 0;
+    let rot = 0, spinning = false, highlight = -1, lastLabel = '';
+    const recent = [];
+    const canvas = $('wheel'), ctx = canvas.getContext('2d'), stage = $('stage');
+
+    function fitLabel(text, maxLen, maxH) {
+      for (let s = 18; s >= 10; s--) {
+        ctx.font = `600 ${s}px Inter, system-ui, sans-serif`;
+        if (s <= maxH && ctx.measureText(text).width <= maxLen) return { lines: [text], size: s };
+        const words = text.split(/\s+/);
+        if (words.length > 1 && s * 2.15 <= maxH) {
+          let best = null;
+          for (let i = 1; i < words.length; i++) {
+            const a = words.slice(0, i).join(' '), b = words.slice(i).join(' ');
+            const w = Math.max(ctx.measureText(a).width, ctx.measureText(b).width);
+            if (!best || w < best.w) best = { a, b, w };
+          }
+          if (best.w <= maxLen) return { lines: [best.a, best.b], size: s };
+        }
+      }
+      ctx.font = '600 10px Inter, system-ui, sans-serif';
+      let t = text;
+      while (t.length > 1 && ctx.measureText(t + '…').width > maxLen) t = t.slice(0, -1);
+      return { lines: [t + '…'], size: 10 };
+    }
+
+    function sliceStyle(k) {
+      // alternate dark/gold; with an odd count the last slice gets bronze so neighbours never match
+      if (N % 2 === 1 && k === N - 1) return { a: '#c98b2c', b: '#7a4f12', ink: '#0a0a0f' };
+      return k % 2 ? { a: '#f2d36b', b: '#b8860b', ink: '#0a0a0f' } : { a: '#26262f', b: '#111118', ink: '#f4d03f' };
+    }
+
+    function drawWheel() {
+      const size = canvas.clientWidth;
+      if (!size || !N) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 3);
+      canvas.width = canvas.height = Math.round(size * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const r = size / 2, c = r, seg = SEG * Math.PI / 180;
+      ctx.clearRect(0, 0, size, size);
+      for (let k = 0; k < N; k++) {
+        const a0 = -Math.PI / 2 + k * seg, st = sliceStyle(k);
+        const g = ctx.createRadialGradient(c, c, r * .15, c, c, r);
+        g.addColorStop(0, st.a); g.addColorStop(1, st.b);
+        ctx.beginPath(); ctx.moveTo(c, c); ctx.arc(c, c, r, a0, a0 + seg); ctx.closePath();
+        ctx.fillStyle = g; ctx.fill();
+        if (highlight >= 0 && k !== highlight) { ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fill(); }
+        ctx.strokeStyle = 'rgba(10,10,15,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+      if (highlight >= 0) {
+        const a0 = -Math.PI / 2 + highlight * seg;
+        ctx.save();
+        ctx.beginPath(); ctx.moveTo(c, c); ctx.arc(c, c, r - 2, a0, a0 + seg); ctx.closePath();
+        ctx.shadowColor = 'rgba(255,240,180,.9)'; ctx.shadowBlur = 18;
+        ctx.strokeStyle = '#fff6d0'; ctx.lineWidth = 3; ctx.stroke();
+        ctx.restore();
+      }
+      const inner = r * .3, outer = r - 12, maxLen = outer - inner;
+      const maxH = 2 * (r * .62) * Math.sin(seg / 2) * .82;
+      for (let k = 0; k < N; k++) {
+        const st = sliceStyle(k), fit = fitLabel(String(slices[k] || ''), maxLen, maxH);
+        ctx.save();
+        ctx.translate(c, c); ctx.rotate(-Math.PI / 2 + (k + .5) * seg);
+        ctx.font = `600 ${fit.size}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillStyle = (highlight >= 0 && k !== highlight) ? 'rgba(255,255,255,.35)' : st.ink;
+        fit.lines.forEach((line, i) => ctx.fillText(line, outer, (i - (fit.lines.length - 1) / 2) * fit.size * 1.1));
+        ctx.restore();
+      }
+      const sh = ctx.createRadialGradient(c, c, r * .7, c, c, r);
+      sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, 'rgba(0,0,0,.28)');
+      ctx.beginPath(); ctx.arc(c, c, r, 0, Math.PI * 2); ctx.fillStyle = sh; ctx.fill();
+    }
+
+    function buildBulbs() {
+      const n = 24;
+      $('bulbs').innerHTML = Array.from({ length: n }, (_, i) => `<span class="bulb" style="--a:${i * 360 / n}deg"></span>`).join('');
+    }
+
+    // Weighted pick: the code's odds decide the result, the wheel just shows it
+    function pick() {
+      const total = weights.reduce((a, b) => a + b, 0);
+      let x = rand() * total;
+      for (let i = 0; i < N; i++) { x -= weights[i]; if (x < 0 && weights[i] > 0) return i; }
+      for (let i = N - 1; i >= 0; i--) if (weights[i] > 0) return i;
+      return 0;
+    }
+
+    function flap() {
+      try { $('pointer').animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-16deg)' }, { transform: 'rotate(0)' }], { duration: 110, easing: 'ease-out' }); } catch (e) {}
+    }
+
+    function setSpinUI(on) {
+      spinning = on;
+      $('spinBtn').disabled = on; $('hub').disabled = on;
+      stage.classList.toggle('spinning', on);
+    }
+
+    function spin() {
+      if (spinning || !N) return;
+      closeResult(false);
+      audio(); whoosh(); haptic(15);
+      highlight = -1; stage.classList.remove('won'); drawWheel();
+      setSpinUI(true);
+      const idx = pick();
+      const p = (idx + .15 + rand() * .7) * SEG;            // landing point inside the chosen slice
+      const target = ((-p % 360) + 360) % 360;
+      const cur = ((rot % 360) + 360) % 360;
+      const start = rot, end = rot + 360 * (5 + Math.floor(rand() * 3)) + ((target - cur + 360) % 360);
+      const dur = 5600 + rand() * 1400, t0 = performance.now();
+      let lastB = Math.floor(start / SEG), lastTick = 0;
+      function frame(now) {
+        const t = Math.min((now - t0) / dur, 1), e = 1 - Math.pow(1 - t, 3);
+        rot = start + (end - start) * e;
+        canvas.style.transform = `rotate(${rot}deg)`;
+        const b = Math.floor(rot / SEG);
+        if (b !== lastB) { lastB = b; if (now - lastTick > 28) { lastTick = now; tickSound(); flap(); if (t > .55) haptic(4); } }
+        if (t < 1) requestAnimationFrame(frame); else finish(idx);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    function finish(idx) {
+      rot = ((rot % 360) + 360) % 360;
+      canvas.style.transform = `rotate(${rot}deg)`;
+      setSpinUI(false);
+      stage.classList.add('won');
+      highlight = idx; drawWheel();
+      winSound(); haptic([20, 40, 20]);
+      lastLabel = String(slices[idx]);
+      recent.unshift(lastLabel); if (recent.length > 3) recent.pop();
+      $('recent').innerHTML = 'Seneste: ' + recent.map(esc).map(s => `<b>${s}</b>`).join(' · ');
+      setTimeout(() => showResult(idx), 650);
+    }
+
+    function esc(s) { return String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+
+    function showResult(idx) {
+      $('resWho').textContent = `${player.n}, hjulet landede på`;
+      $('resLabel').textContent = String(slices[idx]);
+      $('resultOverlay').classList.add('show');
+      confetti();
+    }
+    function closeResult(reset = true) {
+      $('resultOverlay').classList.remove('show');
+      if (reset && !spinning) { highlight = -1; stage.classList.remove('won'); drawWheel(); }
+    }
+
+    function confetti() {
+      const box = $('confetti'); box.innerHTML = '';
+      const colors = ['#d4af37', '#f4d03f', '#fff', '#b8860b', '#fff3b0'];
+      for (let i = 0; i < 36; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti';
+        el.style.background = colors[i % colors.length];
+        el.style.setProperty('--tx', (rand() - .5) * 360 + 'px');
+        el.style.setProperty('--ty', (rand() - .65) * 420 + 'px');
+        el.style.setProperty('--rot', (rand() - .5) * 720 + 'deg');
+        box.appendChild(el);
+        setTimeout(() => el.classList.add('burst'), i * 15);
+      }
+    }
+
+    let toastTimer = 0;
+    function toast(msg) {
+      const t = $('toast'); t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // ── Login ──
+    function showErr(msg) {
+      $('codeErr').textContent = msg; $('codeErr').classList.add('show');
+      const f = $('code'); f.classList.remove('invalid'); void f.offsetWidth; f.classList.add('invalid');
+    }
+    function clearErr() { $('codeErr').classList.remove('show'); $('code').classList.remove('invalid'); }
+    function setBusy(on) { $('unlockBtn').disabled = on; $('unlockBtn').textContent = on ? 'Tjekker koden…' : 'Lås op'; }
+
+    async function tryUnlock(raw, silent = false) {
+      const code = normCode(raw);
+      if (!code) { if (!silent) showErr('Skriv din kode'); return; }
+      if (!window.crypto || !crypto.subtle) { showErr('Siden skal åbnes via https'); return; }
+      clearErr(); setBusy(true);
+      let p = null;
+      try { p = await openCode(code); }
+      catch (e) { setBusy(false); showErr(e.message === 'nodata' ? 'Data mangler (data.js)' : 'Noget gik galt – prøv igen'); return; }
+      setBusy(false);
+      if (!p) {
+        if (silent) { store.del(KEY_CODE); return; }
+        showErr('Forkert kode'); haptic(30); return;
+      }
+      store.set(KEY_CODE, code);
+      enter(p, silent);
+    }
+
+    function enter(p, silent) {
+      player = p;
+      slices = (p.s || []).map(String);
+      N = slices.length; SEG = 360 / N;
+      weights = slices.map((_, i) => Math.max(0, Number((p.w || [])[i]) || 0));
+      if (!weights.some(w => w > 0)) weights = slices.map(() => 1);
+      $('hello').textContent = `Hej, ${p.n}`;
+      recent.length = 0; $('recent').textContent = '';
+      highlight = -1; stage.classList.remove('won');
+      rot = rand() * 360; canvas.style.transform = `rotate(${rot}deg)`;
+      go('wheel', 'forward');
+      requestAnimationFrame(drawWheel);
+      if (!silent) { unlockChime(); haptic(); }
+    }
+
+    function lock() {
+      haptic();
+      store.del(KEY_CODE);
+      closeResult(false);
+      player = null;
+      $('code').value = '';
+      go('login', 'back');
+    }
+
+    // ── Wire up ──
+    buildBulbs();
+    renderSoundBtn();
+    $('unlockBtn').onclick = () => { audio(); tryUnlock($('code').value); };
+    $('code').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); audio(); tryUnlock($('code').value); } });
+    $('code').addEventListener('input', clearErr);
+    $('spinBtn').onclick = spin;
+    $('hub').onclick = spin;
+    $('againBtn').onclick = () => { haptic(); spin(); };
+    $('lockBtn').onclick = lock;
+    $('soundBtn').onclick = () => {
+      soundOn = !soundOn; store.set(KEY_SOUND, soundOn ? '1' : '0'); renderSoundBtn(); haptic();
+      if (soundOn) { audio(); tickSound(); }
+    };
+    $('resultOverlay').addEventListener('click', e => { if (e.target === $('resultOverlay')) closeResult(); });
+    $('shareBtn').onclick = async () => {
+      haptic();
+      const text = `🎡 Operation Bucharest\n${player ? player.n : ''} landede på: ${lastLabel}`;
+      if (navigator.share) {
+        try { await navigator.share({ text }); return; }
+        catch (e) { if (e && e.name === 'AbortError') return; }
+      }
+      try { await navigator.clipboard.writeText(text); toast('Kopieret – klar til at dele'); }
+      catch (e) { toast('Deling virker ikke her'); }
+    };
+    let rz = 0;
+    window.addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(drawWheel); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawWheel);
+
+    const standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !standalone) $('a2hs').classList.add('show');
+
+    if (!DATA) showErr('Data mangler (data.js)');
+    const saved = store.get(KEY_CODE);
+    if (saved && DATA) tryUnlock(saved, true);
+  }
+  </script>
+</body>
+</html>
