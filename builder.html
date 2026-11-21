@@ -99,9 +99,41 @@
     #startStatus.bad { background: rgba(255,127,97,.08); border-left: 2px solid var(--err); color: var(--bone); }
     #startStatus.warn { background: rgba(255,154,61,.08); border-left: 2px solid var(--amber); color: var(--bone); }
     #startStatus strong { color: var(--err); }
+    /* Simple lock screen (see builder-lock.js) */
+    .gate { display: none; min-height: 100vh; min-height: 100dvh; align-items: center; justify-content: center; padding: 24px max(5vw, 16px); }
+    .gated .gate { display: flex; }
+    .gated .wrap { display: none; }
+    .gate-box { width: 100%; max-width: 380px; }
+    .gate h1 { margin: 22px 0 8px; font-size: clamp(26px, 8vw, 36px); }
+    .gate .sub { margin-bottom: 18px; }
+    .gate .inp { min-height: 56px; font-size: 18px; }
+    .gate .btn { width: 100%; margin-top: 12px; min-height: 56px; font-size: 13.5px; }
+    .gate .err { min-height: 22px; margin: 10px 0 0; color: var(--err); font-size: 14px; }
+    .gate .hint { margin-top: 26px; font-size: 13px; color: var(--bone-3); }
   </style>
+  <script src="builder-lock.js"></script>
+  <script>
+    // Simple lock: if builder-lock.js holds a password hash, hide the page until the password is typed (remembered in this tab)
+    (function () {
+      var L = window.OB_LOCK, ok = false;
+      try { ok = !!(L && L.hash) && sessionStorage.getItem('ob_builder_ok') === L.hash; } catch (e) {}
+      if (L && L.hash && !ok) document.documentElement.className += ' gated';
+    })();
+  </script>
 </head>
 <body>
+<div class="gate" id="gate">
+  <form class="gate-box" id="gateForm">
+    <div class="bar"><span>OB / Builder</span><span>Låst</span></div>
+    <h1>Kun for arrangøren</h1>
+    <p class="sub">Skriv adgangskoden til builderen.</p>
+    <input type="text" name="username" autocomplete="username" value="Operation Bucharest builder" class="hidden" aria-hidden="true" tabindex="-1">
+    <input class="inp" id="gatePw" name="password" type="password" autocomplete="current-password" placeholder="Adgangskode" aria-label="Adgangskode">
+    <button class="btn primary" id="gateBtn" type="submit">Lås op</button>
+    <p class="err" id="gateErr" role="alert"></p>
+    <p class="hint">Glemt adgangskoden? Slet <code>builder-lock.js</code> på GitHub, så er låsen væk.</p>
+  </form>
+</div>
 <div class="wrap">
   <div class="bar"><span>OB / Builder</span><span id="tripBar"></span></div>
   <h1>Operation Bucharest · Builder</h1>
@@ -173,11 +205,37 @@
     <p class="status" id="setupStatus" role="status"></p>
     <p class="sub" style="margin:12px 0 0">Efter upload: vent et minuts tid, og genindlæs hjulet. Koder, der ikke er med i den nye fil, holder op med at virke.</p>
   </section>
+
+  <section class="card">
+    <h2>Adgangskode til builderen</h2>
+    <p class="sub">En simpel lås, der holder nysgerrige ude. Koden til siden er offentlig på GitHub, så det er ikke en rigtig lås. Dine venners koder er sikre uanset hvad, og kun du kan ændre dit site.</p>
+    <p class="status" id="lockState"></p>
+    <form class="grid2" id="lockForm" onsubmit="return false">
+      <input type="text" name="username" autocomplete="username" value="Operation Bucharest builder" class="hidden" aria-hidden="true" tabindex="-1">
+      <input class="inp" id="newPw" type="password" autocomplete="new-password" placeholder="Ny adgangskode" aria-label="Ny adgangskode">
+      <input class="inp" id="newPw2" type="password" autocomplete="new-password" placeholder="Gentag adgangskoden" aria-label="Gentag adgangskoden">
+    </form>
+    <div class="row" style="margin-top:12px"><button class="btn" id="makeLock">Lav låsefil</button></div>
+    <p class="status" id="lockStatus" role="status"></p>
+    <ol class="steps">
+      <li>Skriv en adgangskode to gange, og tryk <strong>Lav låsefil</strong>. Filen <code>builder-lock.js</code> bliver hentet.</li>
+      <li>Upload den på GitHub: <em>Add file → Upload files</em>, vælg <code>builder-lock.js</code>, og tryk <em>Commit changes</em>.</li>
+      <li>Efter et par minutter beder builderen om adgangskoden.</li>
+    </ol>
+    <p class="sub" style="margin:12px 0 0">Vil du fjerne låsen, eller har du glemt adgangskoden? Slet <code>builder-lock.js</code> på GitHub, eller lav en ny.</p>
+  </section>
 </div>
 
 <script src="trip.js"></script>
 <script>
-{
+// PBKDF2-SHA256 of the builder password (used by the lock screen and by «Lav låsefil»)
+async function obPwHash(pw, salt, iter) {
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(String(pw).normalize('NFC')), 'PBKDF2', false, ['deriveBits']);
+  const bits = new Uint8Array(await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: iter, hash: 'SHA-256' }, base, 256));
+  let s = ''; bits.forEach(x => s += String.fromCharCode(x)); return btoa(s);
+}
+
+function startBuilder() {
   const $ = id => document.getElementById(id);
   const T = window.OB_TRIP;
   const DRAFT_KEY = 'ob_builder_draft';
@@ -426,10 +484,55 @@
   };
   document.querySelector('label[for="loadSetup"]').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('loadSetup').click(); } });
 
+  // ── Password lock for this page ──
+  const LOCK = window.OB_LOCK && window.OB_LOCK.hash ? window.OB_LOCK : null;
+  $('lockState').textContent = LOCK ? 'Låsen er slået til.' : 'Låsen er slået fra: alle kan åbne builderen (men ingen andre kan ændre dit site).';
+  $('lockState').className = 'status' + (LOCK ? ' ok' : '');
+  $('makeLock').onclick = async () => {
+    const a = $('newPw').value, b = $('newPw2').value;
+    if (a.length < 6) { setStatus('lockStatus', 'Brug mindst 6 tegn.', 'bad'); return; }
+    if (a !== b) { setStatus('lockStatus', 'De to adgangskoder er ikke ens.', 'bad'); return; }
+    if (!window.crypto || !crypto.subtle) { setStatus('lockStatus', 'Din browser tillader ikke kryptering her.', 'bad'); return; }
+    const btn = $('makeLock'); btn.disabled = true; btn.textContent = 'Laver…';
+    try {
+      const salt = crypto.getRandomValues(new Uint8Array(16));
+      const hash = await obPwHash(a, salt, ITER);
+      const text = `/* Operation Bucharest – lås til builder.html, lavet ${new Date().toLocaleString('da-DK')}. Indeholder kun et hash, ikke adgangskoden. Slet filen for at fjerne låsen. */\nwindow.OB_LOCK = ${JSON.stringify({ v: 1, iter: ITER, salt: toB64(salt), hash })};\n`;
+      download('builder-lock.js', text, 'text/javascript');
+      $('newPw').value = $('newPw2').value = '';
+      setStatus('lockStatus', 'Færdig: builder-lock.js er hentet. Næste: upload den på GitHub (trin 2).', 'ok');
+    } catch (e) { setStatus('lockStatus', 'Noget gik galt: ' + e.message, 'bad'); }
+    finally { btn.disabled = false; btn.textContent = 'Lav låsefil'; }
+  };
+
   render();
   renderStart();
   if (loadedNote) { setStatus('setupStatus', loadedNote, 'ok'); persist(); }
 }
+
+// Lock screen: only start the builder once the password is right (or when there is no lock)
+(function () {
+  if (!document.documentElement.classList.contains('gated')) { startBuilder(); return; }
+  const L = window.OB_LOCK, $ = id => document.getElementById(id);
+  const salt = Uint8Array.from(atob(L.salt), c => c.charCodeAt(0));
+  setTimeout(() => { try { $('gatePw').focus(); } catch (e) {} }, 60);
+  $('gatePw').addEventListener('input', () => { $('gateErr').textContent = ''; });
+  $('gateForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const btn = $('gateBtn'), pw = $('gatePw').value;
+    if (!pw) { $('gateErr').textContent = 'Skriv adgangskoden.'; return; }
+    if (!window.crypto || !crypto.subtle) { $('gateErr').textContent = 'Siden skal åbnes via https.'; return; }
+    btn.disabled = true; btn.textContent = 'Tjekker…'; $('gateErr').textContent = '';
+    let ok = false;
+    try { ok = (await obPwHash(pw, salt, L.iter || 250000)) === L.hash; } catch (err) {}
+    btn.disabled = false; btn.textContent = 'Lås op';
+    if (!ok) { $('gateErr').textContent = 'Forkert adgangskode.'; $('gatePw').select(); return; }
+    try { sessionStorage.setItem('ob_builder_ok', L.hash); } catch (err) {}
+    $('gatePw').value = '';
+    document.documentElement.classList.remove('gated');
+    startBuilder();
+  });
+})();
 </script>
 </body>
 </html>
