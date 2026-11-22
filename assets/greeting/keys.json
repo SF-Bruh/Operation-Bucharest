@@ -1,0 +1,34 @@
+{
+  "v": 1,
+  "made": "2026-11-22T20:20:18.832Z",
+  "type": "video/mp4",
+  "iv": "rTGFL1SXDkFNkA3h",
+  "iter": 250000,
+  "people": {
+    "1": {
+      "salt": "eEGukcnbAWuVqryIYItXag==",
+      "iv": "+3kmAWoeyNW04T6N",
+      "key": "YFfmgM3STiOt0/iwV/02IgtNPojBT+9oDkHbbaZH6Fkuj761zbmd24yHMm0Fi13C"
+    },
+    "2": {
+      "salt": "fF4mCJ9MEk8JXoUZFlzD2Q==",
+      "iv": "CQmUiIAdnd/tihYP",
+      "key": "eHGUbIxQalpEEOB2IRPTxLlKqarRy7D5lfRw/BnH1I3LF/l8XjgY6UHO9EmXRny6"
+    },
+    "3": {
+      "salt": "yadEvWfK3XgbRkm79iHtoA==",
+      "iv": "sXmERrzwqVOVRkm7",
+      "key": "9fDcf5xUGniP7zm2+o3I47lIBlZOrm/DGQ4QLUZmuJBAwX2GYBmlpxUpmwc8Klx7"
+    },
+    "4": {
+      "salt": "Uir3r+tjg0xTpcJoxnpM4g==",
+      "iv": "LRbubTTSTmaYJIOE",
+      "key": "CWWESdiQqdtXTN28GY35+Q+QD48QpHKw5BUqZBAyeEuQLnAcqZL4654ucsitbIXh"
+    },
+    "5": {
+      "salt": "yDuiN7HNcZiyVMwwzroPpQ==",
+      "iv": "ZLNcO6za4DGNUvCR",
+      "key": "YtxaD+2K7ezkVMNHsvhvP5uikKBuW4O5OPmrj1qpnbUcPNxrz395ylLf7k0WeHP1"
+    }
+  }
+}
