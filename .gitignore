@@ -1,0 +1,9 @@
+# Never commit the greeting video itself: only assets/greeting/greeting.enc (encrypted) goes in the repo.
+*.mp4
+*.m4v
+*.mov
+*.webm
+
+# Codes in plain text: the local file tools/encrypt-greeting.mjs reads, and the builder's saved setup.
+*.local.json
+operation-bucharest-opsaetning*.json

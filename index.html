@@ -347,6 +347,16 @@
     #wheelSnap.fade { transition: opacity .25s ease; }
     .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
+    /* ── Greeting video (after a typed code, once per tab) ── */
+    .greet { position: fixed; inset: 0; z-index: 900; background: #000; opacity: 1; transition: opacity .4s var(--ease); }
+    .greet[hidden], .greet [hidden] { display: none !important; }
+    .greet.out { opacity: 0; pointer-events: none; }
+    .greet video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #000; }
+    .greet:focus { outline: none; }
+    .greet-tap { position: absolute; z-index: 2; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(320px, calc(100% - 2 * var(--pad))); }
+    .greet-tap:active { transform: translate(-50%, -50%) scale(.985); }
+    .greet-wait { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom) + 28px); text-align: center; font-size: 10px; color: var(--bone-3); }
+
     /* Short screens: give the wheel the room */
     @media (max-height: 640px) {
       .bar.foot { display: none; }
@@ -367,6 +377,7 @@
       .screen, .screen.on { transform: none; transition: opacity .3s, visibility 0s; }
       .stage.won .flash { animation: none; }
       #wheel { transition: none; }
+      .greet { transition: none; }
     }
   </style>
 </head>
@@ -379,7 +390,7 @@
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <div class="screens">
+  <div class="screens" id="screens">
     <!-- LOGIN -->
     <section class="screen on" id="s-login" aria-label="Log ind">
       <div class="col">
@@ -506,6 +517,13 @@
   </div>
   <p class="sr" id="live" aria-live="assertive"></p>
 
+  <!-- Greeting video: after a typed code, once per tab, cannot be skipped. Decrypted with the code (assets/greeting). -->
+  <div class="greet" id="greet" role="dialog" aria-modal="true" aria-label="Velkomstvideo" tabindex="-1" hidden>
+    <video id="greetVideo" playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback></video>
+    <p class="greet-wait mono" id="greetWait">Dekrypterer velkomst…</p>
+    <button class="btn primary greet-tap" id="greetTap" hidden><span>Tryk for at afspille</span><span class="arr" aria-hidden="true">▶</span></button>
+  </div>
+
   <script src="menu.js"></script>
   <script src="data.js"></script>
   <script>
@@ -538,6 +556,7 @@
     const PEOPLE = (M && M.people) || 5;
     const PER = Math.max(2, Math.min(16, Math.round(Number(M && M.perWheel)) || 12));   // slices per wheel
     const catItems = () => MODES.map(m => ({ name: m.name, wheel: m.name }));
+    const DAIQUIRI = /^daiquiri$/i;                                       // this result plays assets/sounds/daiquiri.mp3
 
     // ── Fair draws (crypto.getRandomValues) ──
     const pickSlice = n => Math.floor(rand() * n);                       // every slice equally likely
@@ -602,10 +621,126 @@
       return null;
     }
 
-    // ── Sound: soft, deep synth voices, generated live (no files) ──
+    // ── Greeting video: after a typed code, at most once per tab. The file is encrypted (assets/greeting/greeting.enc);
+    //    keys.json holds its key, wrapped once per person with their own code (made by tools/encrypt-greeting.mjs).
+    //    It never holds up the wheel: a missing file, a failed decryption or a slow load just skips it (logged to the console). ──
+    const GREET = (() => {
+      const DIR = 'assets/greeting/', KEY_SEEN = 'ob_greet', WAIT_MS = 6000;
+      const el = $('greet'), video = $('greetVideo'), tapBtn = $('greetTap'), waitEl = $('greetWait');
+      let files = null, failed = false, busy = false;
+      const seen = () => { try { return sessionStorage.getItem(KEY_SEEN) === '1'; } catch (e) { return false; } };
+      const markSeen = () => { try { sessionStorage.setItem(KEY_SEEN, '1'); } catch (e) {} };
+      const usable = () => !!(window.crypto && crypto.subtle && window.URL && URL.createObjectURL && window.Blob);
+      const skipped = err => console.info('Velkomstvideo springes over:', (err && err.message) || err);
+
+      // Fetch both files while the login screen shows (keys.json first, so a missing setup costs one small request)
+      function prefetch() {
+        if (files || seen() || !usable()) return;
+        const get = (name, as) => fetch(DIR + name).then(r => { if (!r.ok) throw new Error(`${name}: HTTP ${r.status}`); return r[as](); });
+        files = get('keys.json', 'json').then(keys => get('greeting.enc', 'arrayBuffer').then(enc => ({ keys, enc })));
+        files.catch(err => { failed = true; skipped(err); });
+      }
+      // Called inside the login tap / Enter: starting the (still empty) video element here lets the later play() count as
+      // started by the user, so iPhone Safari can play it with sound without a second tap
+      function prime() {
+        if (seen() || failed || busy || !usable()) return;
+        prefetch();
+        try { const pr = video.play(); if (pr && pr.catch) pr.catch(() => {}); video.pause(); } catch (e) {}
+      }
+      async function open(code, p) {
+        const { keys, enc } = await files;
+        const e = keys && keys.people && keys.people[p];
+        if (!e) throw new Error(`ingen nøgle til person ${p} i keys.json`);
+        const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveKey']);
+        const wk = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b64(e.salt), iterations: keys.iter, hash: 'SHA-256' },
+          base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+        const raw = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(e.iv) }, wk, b64(e.key));
+        const vk = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
+        const mp4 = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(keys.iv) }, vk, enc);
+        return new Blob([mp4], { type: keys.type || 'video/mp4' });
+      }
+
+      // Show it for person p, whose code was just accepted. It cannot be skipped. Returns null when there is nothing to show,
+      // else a promise that resolves when it is over (played to the end, or not possible), as the overlay starts to fade.
+      function play(code, p) {
+        if (seen() || failed || busy || !files || !usable()) return null;
+        busy = true;
+        return new Promise(resolve => {
+          let url = '', over = false, ready = false;
+          const screens = $('screens');
+          function finish(fade, err) {
+            if (over) return; over = true;
+            if (err) skipped(err);
+            markSeen();                                                  // counted once it is over, so a reload half-way shows it again
+            clearTimeout(timer);
+            document.removeEventListener('keydown', onKey, true);
+            document.removeEventListener('visibilitychange', onShow);
+            video.onended = video.onerror = video.onplaying = video.onpause = null; tapBtn.onclick = null;
+            try { video.pause(); } catch (e) {}
+            screens.inert = false;
+            resolve();                                                   // the next screen comes in under the fade
+            const clear = () => {
+              el.hidden = true; el.classList.remove('out'); busy = false;
+              video.removeAttribute('src'); try { video.load(); } catch (e) {}
+              if (url) URL.revokeObjectURL(url);
+            };
+            if (fade && !reducedMQ.matches) { el.classList.add('out'); setTimeout(clear, 420); } else clear();
+          }
+          // Sound needs a tap (iPhone), or the phone paused it (app switched, screen locked, a call): with no other
+          // way out, offer a tap to start or carry on. Never played silent.
+          function askTap() {
+            if (over || video.ended) return;
+            waitEl.hidden = true; tapBtn.hidden = false;
+            try { tapBtn.focus({ preventScroll: true }); } catch (e) {}
+          }
+          function onShow() { if (!document.hidden && ready && video.paused && !video.ended && !over) video.play().catch(askTap); }
+          function onKey(e) {
+            if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); }                    // no skipping
+            else if (e.key === 'Tab') { e.preventDefault(); (tapBtn.hidden ? el : tapBtn).focus(); }  // focus stays in the dialog
+          }
+          const timer = setTimeout(() => { if (!ready) finish(false, new Error('ikke klar efter 6 s')); }, WAIT_MS);
+
+          el.hidden = false; el.classList.remove('out'); tapBtn.hidden = true; waitEl.hidden = false;
+          screens.inert = true;
+          document.addEventListener('keydown', onKey, true);
+          document.addEventListener('visibilitychange', onShow);
+          tapBtn.onclick = () => { tapBtn.hidden = true; video.play().catch(err => finish(false, err)); };
+          try { el.focus({ preventScroll: true }); } catch (e) {}
+          video.onplaying = () => { waitEl.hidden = true; tapBtn.hidden = true; };
+          video.onpause = () => { if (ready) askTap(); };
+          video.onended = () => finish(true);
+          video.onerror = () => { if (url && video.getAttribute('src') === url) finish(false, new Error('videoen kunne ikke afspilles')); };
+
+          open(code, p).then(async blob => {
+            if (over) return;
+            url = URL.createObjectURL(blob);
+            video.src = url;
+            try { await video.play(); ready = true; }
+            catch (err) {
+              if (over) return;
+              if (!err || err.name !== 'NotAllowedError') throw err;
+              ready = true; askTap();
+            }
+          }).catch(err => finish(false, err));
+        });
+      }
+      return { prefetch, prime, play };
+    })();
+
+    // ── Sound: soft, deep synth voices, generated live. One file: the Daiquiri result (assets/sounds) ──
     const SFX = (() => {
-      let ctx = null, out = null, send = null, drone = null, noise = null;
+      let ctx = null, out = null, send = null, bus = null, drone = null, noise = null;
       let on = store.get(KEY_SOUND) !== '0';
+      // Daiquiri: fetched at start, decoded once the sound is on. The file is mastered loud, so it plays turned down.
+      const DAIQ_GAIN = .3;
+      let daiqBytes = null, daiqBuf = null;
+      function decodeDaiquiri() {
+        if (!ctx || !daiqBytes || daiqBuf) return;
+        const bytes = daiqBytes; daiqBytes = null;
+        try { ctx.decodeAudioData(bytes, b => { daiqBuf = b; }, err => console.info('daiquiri.mp3 kunne ikke afkodes', err)); } catch (e) {}
+      }
+      fetch('assets/sounds/daiquiri.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error('HTTP ' + r.status)))
+        .then(b => { daiqBytes = b; decodeDaiquiri(); }).catch(err => console.info('daiquiri.mp3:', (err && err.message) || err));
       function impulse(sec, decay) {
         const len = Math.floor(ctx.sampleRate * sec), buf = ctx.createBuffer(2, len, ctx.sampleRate);
         for (let ch = 0; ch < 2; ch++) {
@@ -626,6 +761,7 @@
           const tone = ctx.createBiquadFilter(); tone.type = 'lowpass'; tone.frequency.value = 6000;
           out = ctx.createGain(); out.gain.value = .95;
           out.connect(tone).connect(comp).connect(ctx.destination);
+          bus = comp;                                              // for the sound file: same level control, no tone filter
           const verb = ctx.createConvolver(); verb.buffer = impulse(3.4, 2.4);
           send = ctx.createGain(); send.gain.value = .38;
           send.connect(verb).connect(out);
@@ -633,6 +769,7 @@
           const nd = noise.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
         }
         if (ctx.state === 'suspended') ctx.resume().catch(() => {});
+        decodeDaiquiri();
         return ctx;
       }
       const live = () => on && ctx && ctx.state !== 'closed';
@@ -699,6 +836,14 @@
           });
           voice({ type: 'sine', f: 880, t: t + .35, a: .01, peak: .035, d: 2.6, wet: .8 });
           voice({ type: 'sine', f: 1318.5, t: t + .5, a: .01, peak: .022, d: 2.4, wet: .8 });
+        },
+        daiquiri() {                                               // instead of win() when the result is Daiquiri
+          if (!live()) return;
+          if (!daiqBuf) { this.win(); return; }                    // file not loaded: the usual result sound
+          const s = ctx.createBufferSource(), g = ctx.createGain(), w = ctx.createGain();
+          s.buffer = daiqBuf; g.gain.value = DAIQ_GAIN; w.gain.value = .12;
+          s.connect(g).connect(bus); g.connect(w).connect(send);
+          s.start(ctx.currentTime + .03);
         },
         unlock() {
           if (!live()) return;
@@ -1075,7 +1220,8 @@
 
     function done(idx, cat, fk) {
       highlight = idx; spent = true; drawWheel(); pulse();
-      SFX.win(); haptic([20, 40, 20]);
+      if (DAIQUIRI.test(places[idx].name.trim())) SFX.daiquiri(); else SFX.win();   // Daiquiri has its own sound, instead of the chord
+      haptic([20, 40, 20]);
       lastResult = { idx, n: N, place: places[idx], cat: cat.name, fk };
       remember(cat.id, places[idx].name);
       recent.unshift(`${places[idx].name} (${cat.name})`); if (recent.length > 3) recent.pop();
@@ -1177,25 +1323,27 @@
       catch (e) { setUnlockBusy(false); showErr(e.message === 'nodata' ? 'Data mangler (data.js)' : 'Noget gik galt – prøv igen'); return; }
       setUnlockBusy(false);
       if (!p) {
-        if (silent) { store.del(KEY_CODE); return; }
+        if (silent) { store.del(KEY_CODE); GREET.prefetch(); return; }
         showErr('Forkert kode'); SFX.error(); haptic(30); return;
       }
       const num = Number(p.p);
       if (!Number.isInteger(num) || num < 1 || num > PEOPLE) {
-        if (silent) { store.del(KEY_CODE); return; }
+        if (silent) { store.del(KEY_CODE); GREET.prefetch(); return; }
         showErr('Koden er fra en gammel data.js – byg en ny i builder.html'); return;
       }
-      store.set(KEY_CODE, code);
-      enter({ n: String(p.n || 'Agent'), p: num }, silent);
+      const who = { n: String(p.n || 'Agent'), p: num };
+      const greeting = silent ? null : GREET.play(code, num);           // typed code: the greeting video first (once per tab)
+      if (greeting) greeting.then(() => { store.set(KEY_CODE, code); enter(who, false, true); });   // code kept once it is over
+      else { store.set(KEY_CODE, code); enter(who, silent); }
     }
 
-    function enter(p, silent) {
+    function enter(p, silent, afterVideo = false) {
       player = p; mode = null; fkCat = null; lastResult = null;
       recent.length = 0; renderRecent();
       rot = rand() * 360; canvas.style.transform = `rotate(${rot}deg)`;
       renderChoices();
       go('choose');
-      if (!silent) { SFX.unlock(); haptic(); }
+      if (!silent) { if (!afterVideo) SFX.unlock(); haptic(); }     // no unlock tone straight after the video's voice
     }
 
     function lock() {
@@ -1209,7 +1357,7 @@
       closeResult(false);
       player = null; mode = null; fkCat = null; lastResult = null; recent.length = 0;
       $('code').value = '';
-      go('login');
+      go('login'); GREET.prefetch();
     }
 
     // ── Console checks: OB_SIM.spins(1000) · OB_SIM.draws('beer', 20000) · OB_SIM.fuckit(900) ──
@@ -1261,8 +1409,8 @@
     tickClock();
     (window.requestIdleCallback || (f => setTimeout(f, 60)))(textures);
 
-    $('unlockBtn').onclick = () => { SFX.init(); tryUnlock($('code').value); };
-    $('code').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); SFX.init(); tryUnlock($('code').value); } });
+    $('unlockBtn').onclick = () => { SFX.init(); GREET.prime(); tryUnlock($('code').value); };
+    $('code').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); SFX.init(); GREET.prime(); tryUnlock($('code').value); } });
     $('code').addEventListener('input', clearErr);
     $('choices').addEventListener('click', e => { const b = e.target.closest('[data-mode]'); if (b) choose(b.dataset.mode); });
     $('fuckitBtn').onclick = () => choose(FUCKIT.id);
@@ -1305,7 +1453,8 @@
     if (!MODES.length) showErr('Menuen mangler (menu.js)');
     else if (!DATA) showErr('Data mangler (data.js)');
     const saved = store.get(KEY_CODE);
-    if (saved && DATA && MODES.length) tryUnlock(saved, true);
+    if (saved && DATA && MODES.length) tryUnlock(saved, true);   // a saved code unlocks by itself, without the video
+    else GREET.prefetch();
   }
   </script>
 </body>
