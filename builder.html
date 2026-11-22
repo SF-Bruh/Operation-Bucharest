@@ -8,10 +8,10 @@
   <link rel="stylesheet" href="fonts/fonts.css">
   <style>
     /* VOICE: the back office of Operation Bucharest; same haze and hairlines as the wheel, calmer
-       IDEA: a dispatch sheet: five names, five codes, one rota
-       PICTURE: the rota grid, people as rows and days as columns
+       IDEA: a dispatch sheet: five names, five codes
+       PICTURE: the five person rows with their codes
        COLOUR and TYPE: warm near-black, amber for actions, teal hairlines; Archivo + IBM Plex Mono
-       LAYOUT: one column: people, rota, build, save */
+       LAYOUT: one column: people, build, save */
     :root {
       --bg: #070605; --bone: #ebe3d5; --bone-2: rgba(235,227,213,.68); --bone-3: rgba(235,227,213,.44); --bone-4: rgba(235,227,213,.22);
       --line: rgba(235,227,213,.14); --line-2: rgba(235,227,213,.26);
@@ -64,21 +64,12 @@
     .codewarn { font: 500 11px/1.3 var(--f-mono); letter-spacing: .06em; min-height: 16px; margin-top: 5px; color: var(--err); }
     .codewarn.ok { color: var(--bone-3); }
     .moves { display: flex; gap: 6px; }
-    .rota-line { grid-column: 2 / -1; font: 500 11px/1.5 var(--f-mono); letter-spacing: .06em; color: var(--bone-3); }
-    .rota-line b { color: var(--bone-2); font-weight: 500; }
     @media (max-width: 680px) {
       .person { grid-template-columns: 52px minmax(0, 1fr); }
-      .person > .codecol, .person > .moves, .rota-line { grid-column: 2; }
+      .person > .codecol, .person > .moves { grid-column: 2; }
       .pno { grid-row: span 3; }
     }
 
-    .scroll { overflow-x: auto; }
-    table.rota { border-collapse: collapse; min-width: 560px; width: 100%; font-size: 14px; }
-    .rota th, .rota td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); }
-    .rota thead th { font: 500 10.5px/1.2 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--bone-3); }
-    .rota tbody th { font-weight: 600; white-space: nowrap; }
-    .rota td span { display: inline-block; padding: 3px 8px; font: 500 11.5px/1.3 var(--f-mono); letter-spacing: .04em; box-shadow: inset 0 0 0 1px var(--line-2); }
-    .c0 { color: #ffd0a3; } .c1 { color: #ffb070; } .c2 { color: #ff8f5a; } .c3 { color: #8fe0da; } .c4 { color: #c9b8ff; }
 
     .out { width: 100%; min-height: 110px; resize: vertical; background: #050403; color: var(--bone-2); border: 0; box-shadow: inset 0 0 0 1px var(--line); padding: 12px; font: 12px/1.5 var(--f-mono); overflow-wrap: anywhere; }
     .status { margin-top: 12px; font-size: 14px; min-height: 22px; }
@@ -149,20 +140,14 @@
     <p class="status" id="buildStatus" role="status"></p>
   </section>
 
-  <p class="lead" style="margin-top:24px">Skriv de fem navne og giv hver person en kode. Rækkefølgen bestemmer, hvem der er person 1–5, og dermed hvilken kategori de har hver dag. Byg derefter <code>data.js</code> og læg den på GitHub ved siden af <code>index.html</code>.</p>
+  <p class="lead" style="margin-top:24px">Skriv de fem navne og giv hver person en kode. Rækkefølgen er kun et nummer (1–5). Byg derefter <code>data.js</code> og læg den på GitHub ved siden af <code>index.html</code>.</p>
   <p class="note"><strong>Hold koderne private.</strong> Alt sker i din browser, og intet sendes nogen steder. Kun <code>data.js</code> skal på GitHub – den er krypteret. Din opsætningsfil (.json) og kodelisten indeholder koderne i klartekst og må ikke ligge i repoet.</p>
 
 
   <section class="card">
     <h2>Personer</h2>
-    <p class="sub">Præcis fem personer. Brug pilene for at ændre rækkefølgen. Kategorier og steder ligger i <code>trip.js</code>.</p>
+    <p class="sub">Præcis fem personer. Brug pilene for at ændre rækkefølgen. Listerne til hjulet ligger i <code>menu.js</code>.</p>
     <div class="people" id="people"></div>
-  </section>
-
-  <section class="card">
-    <h2>Turplan</h2>
-    <p class="sub" id="rotaSub"></p>
-    <div class="scroll"><table class="rota" id="rota"></table></div>
   </section>
 
   <section class="card">
@@ -226,7 +211,7 @@
   </section>
 </div>
 
-<script src="trip.js"></script>
+<script src="menu.js"></script>
 <script>
 // PBKDF2-SHA256 of the builder password (used by the lock screen and by «Lav låsefil»)
 async function obPwHash(pw, salt, iter) {
@@ -237,9 +222,9 @@ async function obPwHash(pw, salt, iter) {
 
 function startBuilder() {
   const $ = id => document.getElementById(id);
-  const T = window.OB_TRIP;
+  const M = window.OB_MENU || {};
   const DRAFT_KEY = 'ob_builder_draft';
-  const ITER = 250000, P = T.PEOPLE;
+  const ITER = 250000, P = M.people || 5;
   const ALPH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
   const normCode = s => (s || '').normalize('NFC').toUpperCase().replace(/[^\p{L}\p{N}]/gu, '');
   const esc = s => String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
@@ -304,24 +289,12 @@ function startBuilder() {
           <button class="btn small" data-up="${i}" ${i === 0 ? 'disabled' : ''} aria-label="Flyt person ${i + 1} op">↑</button>
           <button class="btn small" data-down="${i}" ${i === P - 1 ? 'disabled' : ''} aria-label="Flyt person ${i + 1} ned">↓</button>
         </div>
-        <div class="rota-line" id="rl-${i}"></div>
       </div>`).join('');
     refresh();
   }
 
   function refresh() {
-    const days = Array.from({ length: T.DAYS }, (_, d) => d + 1);
-    state.people.forEach((p, i) => {
-      $(`rl-${i}`).innerHTML = days.map(d => `Dag ${d}: <b>${esc(T.category(i + 1, d).name)}</b>`).join(' · ');
-    });
-    const d = T.dateOfDay(1), e = T.dateOfDay(T.DAYS);
-    $('tripBar').innerHTML = `Tur <b>${pad(d.d)}.${pad(d.m)}–${pad(e.d)}.${pad(e.m)}.${e.y}</b> · ${T.DAYS} dage`;
-    $('rotaSub').textContent = `Dag 1 er ${pad(d.d)}.${pad(d.m)}.${d.y}, og dagen skifter ved midnat Bukarest-tid. Hver dag rykker alle én kategori, og hver kategori har præcis én person.`;
-    let h = '<thead><tr><th>Person</th>' + days.map(x => { const dt = T.dateOfDay(x); return `<th>Dag ${x} · ${pad(dt.d)}.${pad(dt.m)}</th>`; }).join('') + '</tr></thead><tbody>';
-    state.people.forEach((p, i) => {
-      h += `<tr><th>${i + 1}. ${esc(name(p, i))}</th>` + days.map(x => `<td><span class="c${T.categoryIndex(i + 1, x)}">${esc(T.category(i + 1, x).name)}</span></td>`).join('') + '</tr>';
-    });
-    $('rota').innerHTML = h + '</tbody>';
+    $('tripBar').textContent = M.tripLabel || '';
     checkCodes();
     $('codeList').value = state.people.map((p, i) => `${i + 1}. ${name(p, i)}: ${p.c}`).join('\n');
   }
@@ -446,7 +419,7 @@ function startBuilder() {
     for (const e of built.data.entries) {
       try {
         const p = JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: fromB64(e.iv) }, key, fromB64(e.ct))));
-        setStatus('testStatus', `Virker: åbner ${p.n} (person ${p.p}). Dag 1: ${T.category(p.p, 1).name}.`, 'ok');
+        setStatus('testStatus', `Virker: åbner ${p.n} (person ${p.p}).`, 'ok');
         return;
       } catch (err) {}
     }
