@@ -117,7 +117,6 @@
     .live { display: inline-block; width: 5px; height: 5px; border-radius: 50%; margin-right: 9px; vertical-align: 1px;
       background: var(--teal); box-shadow: 0 0 8px var(--teal); animation: live 2.6s ease-in-out infinite; }
     @keyframes live { 50% { opacity: .35; } }
-    .test-chip { color: var(--teal); text-decoration: none; border: var(--hair) solid var(--teal-2); padding: 4px 7px; margin: -4px 0; }
 
     /* Buttons */
     .btn {
@@ -163,9 +162,6 @@
     .title span + span { color: transparent; -webkit-text-stroke: var(--hair) rgba(255,194,133,.9); text-shadow: 0 0 30px rgba(255,140,50,.35); }
     @supports not (-webkit-text-stroke: 1px) { .title span + span { color: var(--amber-hi); } }
     .lede { margin-top: 22px; font-size: 15px; line-height: 1.5; color: var(--bone-2); max-width: 30ch; font-weight: 400; }
-    .count { margin-top: 26px; display: flex; flex-direction: column; gap: 8px; }
-    .count .k { font-size: 10px; color: var(--bone-3); }
-    .count .v { font-size: 15px; color: var(--amber-hi); letter-spacing: .12em; text-shadow: 0 0 18px rgba(255,140,50,.45); font-variant-numeric: tabular-nums; }
     .login-form { flex: none; padding: 8px 0 14px; }
     .field-label { display: flex; justify-content: space-between; font-size: 10px; color: var(--bone-3); margin-bottom: 10px; }
     .field-wrap { position: relative; }
@@ -300,6 +296,52 @@
       white-space: nowrap; max-width: calc(100vw - 32px); overflow: hidden; text-overflow: ellipsis;
     }
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    /* ── Choice screen: "Hvad skal du have?" ── */
+    .ask { margin-top: 12px; font-weight: 640; font-stretch: 118%; font-size: clamp(26px, 8.2vw, 36px); line-height: 1.02; letter-spacing: -.01em; text-shadow: 0 0 30px rgba(255,140,50,.25); }
+    .ask-sub { margin-top: 8px; font-size: 15px; line-height: 1.4; color: var(--bone-2); }
+    .choose-main { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 14px 0; }
+    .choices { display: grid; gap: 10px; }
+    .choice {
+      position: relative; display: grid; grid-template-columns: 26px 1fr auto; align-items: center; column-gap: 12px;
+      width: 100%; min-height: clamp(62px, 10.5dvh, 88px); padding: 12px 18px; text-align: left; cursor: pointer;
+      border: 0; border-radius: 2px; background: rgba(235,227,213,.035); box-shadow: inset 0 0 0 var(--hair) var(--line-2);
+      transition: transform .25s var(--ease), box-shadow .3s, background .3s;
+    }
+    .choice:active { transform: scale(.985); background: rgba(255,140,50,.07); }
+    .choice .ci { font: 500 10px/1 var(--f-mono); letter-spacing: .1em; color: var(--bone-3); }
+    .choice .ct { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+    .choice .cn { font-weight: 640; font-stretch: 118%; font-size: clamp(22px, 6.6vw, 28px); line-height: 1; text-transform: uppercase; color: var(--bone); }
+    .choice .cs { font-size: 10px; color: var(--bone-3); }
+    .choice .ca { font: 500 18px/1 var(--f-mono); color: var(--bone-3); }
+    .choice.last { background: rgba(255,140,50,.075); box-shadow: inset 0 0 0 1px rgba(255,154,61,.8), 0 0 44px -14px rgba(255,130,40,.7); }
+    .choice.last .cn, .choice.last .ca { color: var(--amber-hi); }
+    .tag { position: absolute; top: 9px; right: 12px; font: 500 9px/1 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--amber-hi); }
+    .fuckit {
+      position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; column-gap: 12px;
+      width: 100%; min-height: clamp(80px, 13dvh, 108px); margin-top: 6px; padding: 14px 20px; text-align: left; cursor: pointer;
+      border: 0; border-radius: 2px; color: #1b0d03;
+      background: linear-gradient(180deg, #ffbb7c 0%, #ff9944 55%, #f0842f 100%);
+      box-shadow: inset 0 1px 0 rgba(255,238,215,.75), inset 0 -1px 0 rgba(110,36,0,.35), 0 0 0 var(--hair) rgba(255,196,140,.7),
+                  0 22px 50px -22px rgba(255,128,36,.95), 0 0 70px -20px rgba(255,128,36,.6);
+      transition: transform .25s var(--ease), filter .25s, box-shadow .4s;
+    }
+    .fuckit .fn { font-weight: 760; font-stretch: 125%; font-size: clamp(26px, 8vw, 34px); line-height: 1; text-transform: uppercase; letter-spacing: -.01em; }
+    .fuckit .fs { grid-column: 1; margin-top: 9px; font-size: 10px; color: rgba(27,13,3,.72); }
+    .fuckit .fa { grid-row: 1 / 3; grid-column: 2; font: 500 22px/1 var(--f-mono); }
+    .fuckit .tag { color: #1b0d03; }
+    .fuckit:active { transform: scale(.985); filter: brightness(1.08); }
+    .fuckit.last { box-shadow: inset 0 1px 0 rgba(255,238,215,.75), 0 0 0 2px var(--bg), 0 0 0 3.5px var(--teal), 0 22px 50px -22px rgba(255,128,36,.95), 0 0 70px -20px rgba(255,128,36,.6); }
+    /* ── Wheel screen: back to the choices ── */
+    .skift {
+      min-height: 44px; padding: 0 14px; border: 0; border-radius: 2px; cursor: pointer; font-size: 10.5px; color: var(--bone-2);
+      background: rgba(235,227,213,.03); box-shadow: inset 0 0 0 var(--hair) var(--line-2); transition: opacity .3s, color .25s, box-shadow .25s;
+    }
+    .skift:active { color: var(--amber-hi); box-shadow: inset 0 0 0 var(--hair) rgba(255,154,61,.6); }
+    .skift:disabled { opacity: .3; cursor: default; }
+    /* swapping the wheel's contents (Fuck it: category wheel -> item wheel) */
+    #wheel { transition: opacity .26s var(--ease), scale .34s var(--ease); }
+    #wheel.swap-out { opacity: 0; scale: .86; }
     .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
     /* Short screens: give the wheel the room */
@@ -310,17 +352,18 @@
       .status { margin-top: 6px; }
       .login-main { padding: 10px 0; }
       .lede { margin-top: 14px; }
-      .count { margin-top: 16px; }
       .kicker { margin-bottom: 12px; }
       .recent { margin-top: 8px; }
     }
-    @media (max-height: 560px) { .lede { display: none; } .btn { min-height: 52px; } }
+    @media (max-height: 640px) { .ask { margin-top: 8px; } .choose-main { padding: 10px 0; } .choices { gap: 8px; } }
+    @media (max-height: 560px) { .lede, .ask-sub { display: none; } .btn { min-height: 52px; } .choice { min-height: 56px; } .fuckit { min-height: 70px; } }
 
     @media (prefers-reduced-motion: reduce) {
       .haze, .dust, .grain, .ghost, .live, .halo, .stage.spinning .shimmer { animation: none !important; }
       .screen.on .rise, .sheet-overlay.show .sheet > * { animation: none; }
       .screen, .screen.on { transform: none; transition: opacity .3s, visibility 0s; }
       .stage.won .flash { animation: none; }
+      #wheel { transition: none; }
     }
   </style>
 </head>
@@ -339,17 +382,13 @@
       <div class="col">
         <header class="bar rise" style="--i:0">
           <span><i class="live"></i>OB / Adgang</span>
-          <span id="clockL"><b>BUC --:--:--</b></span>
+          <span class="js-clock"><b>BUC --:--:--</b></span>
         </header>
         <div class="login-main">
           <div class="ghost" id="ghost" aria-hidden="true"></div>
-          <p class="kicker mono rise" style="--i:1" id="tripDates"></p>
+          <p class="kicker mono rise" style="--i:1"><b id="tripLabel"></b></p>
           <h1 class="title rise" style="--i:2"><span>Operation</span><span>Bucharest</span></h1>
           <p class="lede rise" style="--i:3">Indtast din personlige kode for at fortsætte.</p>
-          <div class="count rise" style="--i:4" id="countBox" hidden>
-            <span class="k mono">Turen starter om</span>
-            <span class="v mono" id="countL"></span>
-          </div>
         </div>
         <div class="login-form rise" style="--i:5">
           <label class="field-label mono" for="code"><span>Personlig kode</span><span>AES-256</span></label>
@@ -362,7 +401,38 @@
         </div>
         <footer class="bar foot rise" style="--i:6">
           <span>44.4268° N · 26.1025° Ø</span>
-          <span class="test-slot"></span>
+          <span>Bar-hjulet</span>
+        </footer>
+      </div>
+    </section>
+
+    <!-- CHOOSE: what are you having? -->
+    <section class="screen" id="s-choose" aria-label="Vælg">
+      <div class="col">
+        <header class="bar rise" style="--i:0">
+          <span><i class="live"></i>OB / Bar-hjulet</span>
+          <span class="js-clock"><b>BUC --:--:--</b></span>
+        </header>
+        <div class="head">
+          <div class="hello-row rise" style="--i:1">
+            <p class="hello mono" id="helloC"></p>
+            <div class="head-btns">
+              <button class="sq js-sound" aria-label="Lyd til eller fra"></button>
+              <button class="sq js-lock" aria-label="Skift kode">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><rect x="5" y="11" width="14" height="9"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+              </button>
+            </div>
+          </div>
+          <h1 class="ask rise" style="--i:2">Hvad skal du have?</h1>
+          <p class="ask-sub rise" style="--i:3">Vælg, og lad hjulet bestemme.</p>
+        </div>
+        <div class="choose-main rise" style="--i:4">
+          <div class="choices" id="choices"></div>
+          <button class="fuckit" id="fuckitBtn"><span class="fn">Fuck it</span><span class="fs mono">Hjulet vælger det hele</span><span class="fa" aria-hidden="true">→</span><span class="tag" hidden>Sidst</span></button>
+        </div>
+        <footer class="bar foot rise" style="--i:5">
+          <span>44.4268° N · 26.1025° Ø</span>
+          <span>Lige chancer</span>
         </footer>
       </div>
     </section>
@@ -371,15 +441,15 @@
     <section class="screen" id="s-wheel" aria-label="Hjulet">
       <div class="col">
         <header class="bar rise" style="--i:0">
-          <span id="dayRO"><i class="live"></i>Dag --/--</span>
-          <span id="clockW"><b>BUC --:--:--</b></span>
+          <span><i class="live"></i>OB / Bar-hjulet</span>
+          <span class="js-clock"><b>BUC --:--:--</b></span>
         </header>
         <div class="head">
           <div class="hello-row rise" style="--i:1">
-            <p class="hello mono" id="hello"></p>
+            <button class="skift mono" id="skiftBtn" aria-label="Skift kategori">Skift ↺</button>
             <div class="head-btns">
-              <button class="sq" id="soundBtn" aria-label="Lyd til eller fra"></button>
-              <button class="sq" id="lockBtn" aria-label="Skift kode">
+              <button class="sq js-sound" aria-label="Lyd til eller fra"></button>
+              <button class="sq js-lock" aria-label="Skift kode">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><rect x="5" y="11" width="14" height="9"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               </button>
             </div>
@@ -409,7 +479,7 @@
         </div>
         <footer class="bar foot rise" style="--i:6">
           <span>44.4268° N · 26.1025° Ø</span>
-          <span class="test-slot"></span>
+          <span>Lige chancer</span>
         </footer>
       </div>
     </section>
@@ -418,7 +488,7 @@
   <!-- RESULT -->
   <div class="sheet-overlay" id="resultOverlay">
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="resLabel">
-      <div class="sheet-bar mono"><span id="resMeta"></span><span class="amb" id="resDay"></span></div>
+      <div class="sheet-bar mono"><span id="resMeta"></span><span class="amb" id="resTag"></span></div>
       <p class="res-who" id="resWho"></p>
       <h2 class="res-label" id="resLabel"></h2>
       <p class="res-cat mono" id="resCat"></p>
@@ -432,38 +502,44 @@
   </div>
   <p class="sr" id="live" aria-live="assertive"></p>
 
-  <script src="trip.js"></script>
+  <script src="menu.js"></script>
   <script src="data.js"></script>
   <script>
   {
     const $ = id => document.getElementById(id);
-    const T = window.OB_TRIP, DATA = window.OB_DATA;
+    const $$ = sel => document.querySelectorAll(sel);
+    const M = window.OB_MENU, DATA = window.OB_DATA;
     const store = {
       get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
       set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} },
       del(k) { try { localStorage.removeItem(k); } catch (e) {} }
     };
-    const KEY_CODE = 'ob_code', KEY_SOUND = 'ob_sound';
+    const KEY_CODE = 'ob_code', KEY_SOUND = 'ob_sound', KEY_MODE = 'ob_mode';
     const TAU = Math.PI * 2;
     const mod = (a, n) => ((a % n) + n) % n;
     const pad = (n, l = 2) => String(n).padStart(l, '0');
     const esc = s => String(s).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
     const reducedMQ = window.matchMedia ? matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+    const wait = ms => new Promise(r => setTimeout(r, ms));
     function haptic(p = 10) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
     function rand() { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] / 4294967296; }
 
-    // ── Time: Bucharest clock, with an optional test date (?dato=2026-11-27 or ?dato=2026-11-27T23:59) ──
-    let shift = 0, testDate = null;
-    try {
-      const q = new URLSearchParams(location.search).get('dato');
-      if (q) { const t = T.parseTestDate(q, Date.now()); if (t != null) { shift = t - Date.now(); testDate = q; } }
-    } catch (e) {}
-    const now = () => Date.now() + shift;
-    const WD = ['søn', 'man', 'tir', 'ons', 'tor', 'fre', 'lør'];
-    function dayDate(day) { const d = T.dateOfDay(day); return { ...d, wd: WD[new Date(Date.UTC(d.y, d.m - 1, d.d)).getUTCDay()] }; }
-    function countdown(ms) {
-      const s = Math.max(0, Math.floor(ms / 1000));
-      return `${pad(Math.floor(s / 86400))}D ${pad(Math.floor(s / 3600) % 24)}T ${pad(Math.floor(s / 60) % 60)}M ${pad(s % 60)}S`;
+    // ── Menu (menu.js): the lists; "Fuck it" is a mode that uses all of them ──
+    const item = x => typeof x === 'string' ? { name: x, wheel: x } : { name: String(x.name), wheel: String(x.wheel || x.name) };
+    const MODES = (M && Array.isArray(M.modes) ? M.modes : []).map(m => {
+      const items = (m.items || []).map(item), sub = String(m.sub || '');
+      return { id: String(m.id), name: String(m.name), items, sub: /^\d+/.test(sub) ? sub.replace(/^\d+/, items.length) : `${items.length} ${sub}`.trim() };
+    });
+    const FUCKIT = { id: 'fuckit', name: 'Fuck it' };
+    const PEOPLE = (M && M.people) || 5;
+    const catItems = () => MODES.map(m => ({ name: m.name, wheel: m.name }));
+
+    // ── Bucharest clock: just a readout ──
+    let clockFmt = null;
+    try { clockFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Bucharest', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }); } catch (e) {}
+    function tickClock() {
+      const t = clockFmt ? clockFmt.format(new Date()) : new Date().toTimeString().slice(0, 8);
+      $$('.js-clock').forEach(el => { el.innerHTML = `<b>BUC ${t}</b>`; });
     }
 
     // ── Codes: each person's entry is encrypted with their own code (PBKDF2-SHA256 + AES-GCM) ──
@@ -594,12 +670,26 @@
           const t = ctx.currentTime;
           [0, .16].forEach(o => voice({ type: 'sawtooth', f: 92, t: t + o, a: .01, peak: .16, d: .13, lp: [520], wet: .15 }));
         },
+        stage() {   // Fuck it: the category is chosen
+          if (!live()) return;
+          const t = ctx.currentTime + .02;
+          voice({ type: 'sine', f: 110, f2: 73.42, glide: .35, t, a: .01, peak: .24, d: .9, wet: .25 });
+          [220, 329.63, 440].forEach((fr, i) => voice({ type: 'triangle', f: fr, t: t + i * .06, a: .02, peak: .07, d: 1.1, lp: [900, 1800, .1, 600], wet: .55 }));
+        },
+        swish() {   // the wheel swaps its contents
+          if (!live()) return;
+          const t = ctx.currentTime, src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+          src.buffer = noise; f.type = 'bandpass'; f.Q.value = 1.4;
+          f.frequency.setValueAtTime(1400, t); f.frequency.exponentialRampToValueAtTime(300, t + .5);
+          env(g, t, .08, .05, .5);
+          src.connect(f).connect(g); route(g, .5); src.start(t); src.stop(t + .65);
+        },
         soft() { if (live()) voice({ type: 'sine', f: 330, f2: 220, glide: .2, t: ctx.currentTime, a: .01, peak: .08, d: .5, wet: .5 }); }
       };
     })();
     const ICON_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/></svg>';
     const ICON_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="m16 10 4 4M20 10l-4 4"/></svg>';
-    function renderSoundBtn() { $('soundBtn').innerHTML = SFX.on ? ICON_ON : ICON_OFF; $('soundBtn').setAttribute('aria-pressed', String(SFX.on)); }
+    function renderSoundBtn() { $$('.js-sound').forEach(b => { b.innerHTML = SFX.on ? ICON_ON : ICON_OFF; b.setAttribute('aria-pressed', String(SFX.on)); }); }
 
     // ── Atmosphere textures (generated once, tiled by CSS) ──
     function textures() {
@@ -656,8 +746,8 @@
     }
 
     // ── Wheel ──
-    let player = null, trip = T.state(now()), cat = null, places = [], N = 0, SEG = 0;
-    let rot = 0, spinning = false, highlight = -1, lastResult = null, pendingDay = false, raf = 0, shownDay = 1, resultTimer = 0;
+    let player = null, mode = null, fkCat = null, wheelKind = 'items', places = [], N = 0, SEG = 0;
+    let rot = 0, busy = false, highlight = -1, lastResult = null, raf = 0, resultTimer = 0, runId = 0;
     const recent = [];
     const canvas = $('wheel'), ctx = canvas.getContext('2d'), stage = $('stage'), halo = $('halo');
     const LABEL_FONT = s => `600 ${s}px "Archivo Narrow", "Arial Narrow", sans-serif`;
@@ -667,6 +757,13 @@
 
     // Find one font size that lets every label fit its slice (1 or 2 lines), as large as possible
     function layoutLabels(R) {
+      if (N <= 4) {
+        const rr = R * .6, maxW = 2 * rr * Math.sin(Math.PI / N) * .78, texts = places.map(p => p.wheel.toUpperCase());
+        for (let s = Math.min(34, R * .17); s >= 10; s -= .5) {
+          ctx.font = LABEL_FONT(s);
+          if (texts.every(t => ctx.measureText(t).width <= maxW)) return { size: s, lines: texts.map(t => [t]), ok: true, few: true, rr };
+        }
+      }
       const inner = R * GEO.labelIn, outer = R * GEO.labelOut, maxLen = outer - inner, tanH = Math.tan(Math.PI / N);
       const fits = (lines, s) => {
         ctx.font = LABEL_FONT(s);
@@ -690,7 +787,7 @@
         }
         return pick && pick.lines;
       };
-      const maxS = Math.max(11, Math.min(15.5, R * .09)), minS = 9.5;
+      const few = N <= 4, maxS = Math.max(11, Math.min(few ? 34 : 15.5, R * (few ? .17 : .09))), minS = 9.5;
       for (let s = maxS; s >= minS; s -= .25) {
         const lines = places.map(p => best(p.wheel, s));
         if (lines.every(Boolean)) return { size: s, lines, ok: true };
@@ -715,7 +812,8 @@
       if (canvas.width !== px) { canvas.width = canvas.height = px; layout = null; }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       const R = size / 2, c = R, seg = TAU / N, hair = Math.max(.5, 1 / dpr);
-      if (!layout || layout.key !== `${N}|${R}|${cat && cat.name}`) { layout = layoutLabels(R); layout.key = `${N}|${R}|${cat && cat.name}`; stage.dataset.labelPx = layout.size; stage.dataset.labelOk = layout.ok; }
+      const key = `${R}|${places.map(p => p.wheel).join('|')}`;
+      if (!layout || layout.key !== key) { layout = layoutLabels(R); layout.key = key; stage.dataset.labelPx = layout.size; stage.dataset.labelOk = layout.ok; }
       ctx.clearRect(0, 0, size, size);
 
       // base: smoked glass
@@ -727,9 +825,11 @@
       for (let k = 0; k < N; k++) {
         const a0 = -Math.PI / 2 + k * seg, win = k === highlight, dim = highlight >= 0 && !win;
         g = ctx.createRadialGradient(c, c, R * GEO.hub, c, c, R * GEO.band);
+        const tone = N % 2 === 1 && k === N - 1 ? 2 : k % 2;   // odd counts: the last slice gets its own tint, so neighbours never match
         if (win) { g.addColorStop(0, 'rgba(255,176,100,.16)'); g.addColorStop(.6, 'rgba(255,150,60,.36)'); g.addColorStop(1, 'rgba(255,182,110,.66)'); }
-        else if (k % 2 === 0) { g.addColorStop(0, 'rgba(255,150,70,.02)'); g.addColorStop(1, 'rgba(255,140,58,.2)'); }
-        else { g.addColorStop(0, 'rgba(255,150,70,0)'); g.addColorStop(1, 'rgba(255,150,80,.075)'); }
+        else if (tone === 0) { g.addColorStop(0, 'rgba(255,150,70,.02)'); g.addColorStop(1, 'rgba(255,140,58,.2)'); }
+        else if (tone === 1) { g.addColorStop(0, 'rgba(255,150,70,0)'); g.addColorStop(1, 'rgba(255,150,80,.075)'); }
+        else { g.addColorStop(0, 'rgba(255,150,70,.01)'); g.addColorStop(1, 'rgba(255,146,66,.135)'); }
         wedge(c, R * GEO.hub, R * GEO.band, a0, a0 + seg);
         ctx.fillStyle = g; ctx.fill();
         if (dim) { ctx.fillStyle = 'rgba(5,4,3,.58)'; ctx.fill(); }
@@ -790,16 +890,19 @@
       for (let k = 0; k < N; k++) {
         const lines = layout.lines[k], win = k === highlight, dim = highlight >= 0 && !win;
         ctx.save();
-        ctx.translate(c, c); ctx.rotate(-Math.PI / 2 + (k + .5) * seg);
+        ctx.translate(c, c);
+        if (layout.few) { ctx.rotate((k + .5) * seg); ctx.textAlign = 'center'; }   // across the slice, upright when it is under the pointer
+        else { ctx.rotate(-Math.PI / 2 + (k + .5) * seg); ctx.textAlign = 'right'; }
         lines.forEach((line, i) => {
-          const y = (i - (lines.length - 1) / 2) * s * 1.06;
+          const y = layout.few ? -layout.rr : (i - (lines.length - 1) / 2) * s * 1.06;
+          const x = layout.few ? 0 : outer;
           if (!dim) { // faint chromatic fringe: the holographic edge
-            ctx.fillStyle = 'rgba(116,212,207,.22)'; ctx.fillText(line, outer + .6, y + .5);
-            ctx.fillStyle = 'rgba(255,120,40,.22)'; ctx.fillText(line, outer - .6, y - .5);
+            ctx.fillStyle = 'rgba(116,212,207,.22)'; ctx.fillText(line, x + .6, y + .5);
+            ctx.fillStyle = 'rgba(255,120,40,.22)'; ctx.fillText(line, x - .6, y - .5);
           }
           if (win) { ctx.shadowColor = 'rgba(255,150,60,.9)'; ctx.shadowBlur = 10; }
           ctx.fillStyle = win ? '#fff5ea' : dim ? 'rgba(235,227,213,.26)' : 'rgba(240,233,221,.94)';
-          ctx.fillText(line, outer, y);
+          ctx.fillText(line, x, y);
           ctx.shadowBlur = 0;
         });
         ctx.restore();
@@ -826,74 +929,120 @@
       try { $('pointer').animate([{ transform: 'translateX(-50%) rotate(0)' }, { transform: `translateX(-50%) rotate(${-4 - sp * 5}deg)` }, { transform: 'translateX(-50%) rotate(0)' }], { duration: 160, easing: 'cubic-bezier(.2,.7,0,1)' }); } catch (e) {}
     }
 
-    function setSpinUI(on) {
-      spinning = on;
-      $('spinBtn').disabled = on; $('hub').disabled = on;
+    // Put a list on the wheel (any count; the label fit is recomputed for the new list)
+    function setWheel(items, kind) {
+      places = items; N = places.length; SEG = 360 / N; wheelKind = kind; layout = null;
+      highlight = -1; stage.classList.remove('won');
+      stage.dataset.kind = kind;
+      drawWheel();
+    }
+    // Same, with a short fade/zoom (about 0.6 s)
+    async function swapWheel(items, kind) {
+      if (reducedMQ.matches) { setWheel(items, kind); return; }
+      canvas.classList.add('swap-out'); SFX.swish();
+      await wait(260);
+      setWheel(items, kind);
+      canvas.classList.remove('swap-out');
+      await wait(340);
+    }
+    function pulse() { stage.classList.remove('won'); void stage.offsetWidth; stage.classList.add('won'); }
+
+    function setBusy(on) {
+      busy = on;
+      $('spinBtn').disabled = on; $('hub').disabled = on; $('skiftBtn').disabled = on;
       $('spinTxt').textContent = on ? 'Hjulet drejer…' : 'Spin hjulet';
-      stage.classList.toggle('spinning', on);
-      if (!on) halo.style.opacity = '';
     }
 
-    function spin() {
-      if (spinning || !N) return;
+    // One fair spin of whatever is on the wheel. Resolves with the slice under the pointer.
+    function spinWheel(dur, turns, id) {
+      return new Promise(resolve => {
+        const reduced = reducedMQ.matches;
+        highlight = -1; stage.classList.remove('won'); drawWheel();
+        stage.classList.add('spinning'); SFX.whoosh(); SFX.droneStart();
+        const idx = Math.floor(rand() * N);                     // fair: every slice equally likely
+        const p = (idx + .18 + rand() * .64) * SEG;              // landing point, well inside the slice
+        const start = rot, end = rot + 360 * turns + mod(-p - rot, 360);
+        const t0 = performance.now(), ease = reduced ? (t => 1 - Math.pow(1 - t, 3)) : EASE;
+        let lastB = Math.floor(start / SEG), lastTick = 0, lastRot = start, lastT = t0;
+        function frame(nowT) {
+          if (id !== runId) return;                             // logged out meanwhile
+          const t = Math.min((nowT - t0) / dur, 1);
+          rot = start + (end - start) * ease(t);
+          canvas.style.transform = `rotate(${rot}deg)`;
+          const v = (rot - lastRot) / Math.max(1, nowT - lastT), sp = Math.min(1, v / .75);
+          lastRot = rot; lastT = nowT;
+          halo.style.opacity = (.7 + .3 * sp).toFixed(3);
+          SFX.drone(sp);
+          const b = Math.floor(rot / SEG);
+          if (b !== lastB) { lastB = b; if (nowT - lastTick > 48) { lastTick = nowT; SFX.tick(sp); nudge(sp); if (sp < .35) haptic(3); } }
+          if (t < 1) { raf = requestAnimationFrame(frame); return; }
+          rot = mod(rot, 360);
+          canvas.style.transform = `rotate(${rot}deg)`;
+          stage.classList.remove('spinning'); halo.style.opacity = ''; SFX.droneStop();
+          resolve(sliceAt(rot));                                 // == idx; the sheet always names the slice under the pointer
+        }
+        raf = requestAnimationFrame(frame);
+      });
+    }
+
+    async function spin() {
+      if (busy || !player || !mode || !N) return;
       closeResult(false);
-      SFX.init(); SFX.whoosh(); SFX.droneStart(); haptic(15);
-      highlight = -1; stage.classList.remove('won'); drawWheel();
-      setSpinUI(true);
-      const reduced = reducedMQ.matches;
-      const idx = Math.floor(rand() * N);                     // fair: every slice equally likely
-      const p = (idx + .18 + rand() * .64) * SEG;              // landing point, well inside the slice
-      const start = rot, end = rot + 360 * (reduced ? 1 : 4 + Math.floor(rand() * 2)) + mod(-p - rot, 360);
-      const dur = reduced ? 1500 : 7000 + rand() * 1200, t0 = performance.now();
-      const ease = reduced ? (t => 1 - Math.pow(1 - t, 3)) : EASE;
-      let lastB = Math.floor(start / SEG), lastTick = 0, lastRot = start, lastT = t0;
-      function frame(nowT) {
-        const t = Math.min((nowT - t0) / dur, 1);
-        rot = start + (end - start) * ease(t);
-        canvas.style.transform = `rotate(${rot}deg)`;
-        const v = (rot - lastRot) / Math.max(1, nowT - lastT), sp = Math.min(1, v / .75);
-        lastRot = rot; lastT = nowT;
-        halo.style.opacity = (.7 + .3 * sp).toFixed(3);
-        SFX.drone(sp);
-        const b = Math.floor(rot / SEG);
-        if (b !== lastB) { lastB = b; if (nowT - lastTick > 48) { lastTick = nowT; SFX.tick(sp); nudge(sp); if (sp < .35) haptic(3); } }
-        if (t < 1) raf = requestAnimationFrame(frame); else finish(idx);
-      }
-      raf = requestAnimationFrame(frame);
+      const id = ++runId, reduced = reducedMQ.matches;
+      SFX.init(); haptic(15); setBusy(true);
+      try {
+        if (mode.id === FUCKIT.id) {
+          // Stage 1: the category wheel picks Øl / Shots / Drinks (equal odds)
+          if (wheelKind !== 'cats') { fkCat = null; renderHead(); await swapWheel(catItems(), 'cats'); if (id !== runId) return; }
+          fkCat = null; renderHead();
+          const ci = await spinWheel(reduced ? 1500 : 3000 + rand() * 1000, reduced ? 1 : 2 + Math.floor(rand() * 2), id);
+          if (id !== runId) return;
+          fkCat = MODES[ci];
+          highlight = ci; drawWheel(); pulse();
+          SFX.stage(); haptic([15, 30, 15]);
+          toast(`→ ${fkCat.name}`, 1800);
+          renderHead();
+          await wait(reduced ? 250 : 650); if (id !== runId) return;
+          // Stage 2: that category's items, spun by itself
+          await swapWheel(fkCat.items, 'items'); if (id !== runId) return;
+          renderHead();
+          const ii = await spinWheel(reduced ? 1500 : 5600 + rand() * 1000, reduced ? 1 : 3 + Math.floor(rand() * 2), id);
+          if (id !== runId) return;
+          done(ii, fkCat, true);
+        } else {
+          const ii = await spinWheel(reduced ? 1500 : 7000 + rand() * 1200, reduced ? 1 : 4 + Math.floor(rand() * 2), id);
+          if (id !== runId) return;
+          done(ii, mode, false);
+        }
+      } finally { if (id === runId) setBusy(false); }
     }
 
-    function finish(idx) {
-      rot = mod(rot, 360);
-      canvas.style.transform = `rotate(${rot}deg)`;
-      const shown = sliceAt(rot);
-      if (shown !== idx) idx = shown;                          // the sheet always names the slice under the pointer
-      setSpinUI(false);
-      highlight = idx; drawWheel();
-      stage.classList.remove('won'); void stage.offsetWidth; stage.classList.add('won');
-      SFX.droneStop(); SFX.win(); haptic([20, 40, 20]);
-      lastResult = { idx, place: places[idx], cat: cat.name, day: shownDay };
-      recent.unshift(places[idx].name); if (recent.length > 3) recent.pop();
-      $('recent').innerHTML = 'Seneste · ' + recent.map(s => `<b>${esc(s)}</b>`).join(' · ');
+    function done(idx, cat, fk) {
+      highlight = idx; drawWheel(); pulse();
+      SFX.win(); haptic([20, 40, 20]);
+      lastResult = { idx, n: N, place: places[idx], cat: cat.name, fk };
+      recent.unshift(`${places[idx].name} (${cat.name})`); if (recent.length > 3) recent.pop();
+      renderRecent();
       resultTimer = setTimeout(showResult, reducedMQ.matches ? 250 : 950);
     }
+    function renderRecent() { $('recent').innerHTML = recent.length ? 'Seneste · ' + recent.map(s => `<b>${esc(s)}</b>`).join(' · ') : ''; }
 
     function showResult() {
       resultTimer = 0;
       const r = lastResult; if (!r || !player) return;
-      $('resMeta').textContent = `Resultat · Felt ${pad(r.idx + 1)}/${pad(N)}`;
-      $('resDay').textContent = `Dag ${pad(r.day)}/${pad(T.DAYS)}`;
-      $('resWho').textContent = `${player.n}, hjulet landede på`;
+      $('resMeta').textContent = `Resultat · Felt ${pad(r.idx + 1)}/${pad(r.n)}`;
+      $('resTag').textContent = r.fk ? FUCKIT.name : r.cat;
+      $('resWho').textContent = `${player.n}, du skal bestille`;
       $('resLabel').textContent = r.place.name;
-      $('resCat').innerHTML = `${esc(r.cat)} <span>· Dag ${r.day}</span>`;
+      $('resCat').textContent = r.fk ? `Fuck it → ${r.cat}` : r.cat;
       $('resultOverlay').classList.add('show');
-      $('live').textContent = `Hjulet landede på ${r.place.name}`;
+      $('live').textContent = `${player.n}, du skal bestille ${r.place.name}`;
       setTimeout(() => { try { $('againBtn').focus({ preventScroll: true }); } catch (e) {} }, 400);
     }
     function closeResult(reset = true) {
       clearTimeout(resultTimer); resultTimer = 0;
       $('resultOverlay').classList.remove('show');
-      if (reset && !spinning) { highlight = -1; stage.classList.remove('won'); drawWheel(); }
-      if (pendingDay) applyDay(true);
+      if (reset && !busy) { highlight = -1; stage.classList.remove('won'); drawWheel(); }
     }
 
     let toastTimer = 0;
@@ -902,51 +1051,52 @@
       clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms);
     }
 
-    // ── Day + readouts ──
+    // ── Header ──
     function fitToday() {
       const el = $('today'); el.style.fontSize = '';
       let fs = parseFloat(getComputedStyle(el).fontSize);
       while (el.scrollWidth > el.clientWidth + 1 && fs > 16) { fs -= 1; el.style.fontSize = fs + 'px'; }
     }
-    function applyDay(announce) {
-      pendingDay = false;
-      if (!player) return;
-      shownDay = trip.day;
-      const next = T.category(player.p, shownDay), changed = !cat || next.name !== cat.name;
-      cat = next; places = cat.places; N = places.length; SEG = 360 / N; layout = null;
-      $('today').innerHTML = `<span class="d">Dag ${shownDay}</span><span class="sep">·</span><span class="c">${esc(cat.name)}</span>`;
-      $('today').setAttribute('aria-label', `Dag ${shownDay} · ${cat.name}`);
-      document.title = `Dag ${shownDay} · ${cat.name} – Operation Bucharest`;
+    function renderHead() {
+      if (!player || !mode) return;
+      const label = mode.id === FUCKIT.id ? (fkCat ? `Fuck it → ${fkCat.name}` : FUCKIT.name) : mode.name;
+      $('today').innerHTML = `<span class="d">${esc(player.n)}</span><span class="sep">·</span><span class="c">${esc(label)}</span>`;
+      $('today').setAttribute('aria-label', `${player.n} · ${label}`);
+      document.title = `${label} – Operation Bucharest`;
+      $('status').innerHTML = mode.id === FUCKIT.id
+        ? (fkCat ? `Trin 2 af 2 · <span class="amb">${esc(fkCat.sub)}</span>` : 'Trin 1 af 2 · <span class="amb">hjulet vælger kategori</span>')
+        : `${N} felter · <span class="amb">lige chancer</span>`;
       fitToday();
-      if (changed) {
-        highlight = -1; stage.classList.remove('won');
-        recent.length = 0; $('recent').textContent = '';
-        drawWheel();
-        if (announce) { toast(`Ny dag · Dag ${shownDay} · ${cat.name}`, 4200); SFX.soft(); }
-      }
-      readouts();
     }
-    function readouts() {
-      const st = trip, c = st.clock, day = player ? shownDay : st.day, dd = dayDate(day);
-      const clock = `<b>BUC ${pad(c.h)}:${pad(c.mi)}:${pad(c.s)}</b>`;
-      $('clockL').innerHTML = clock; $('clockW').innerHTML = clock;
-      $('dayRO').innerHTML = `<i class="live"></i><b>Dag ${pad(day)}/${pad(st.days)}</b> · ${dd.wd} ${pad(dd.d)}.${pad(dd.m)}`;
-      const before = st.phase === 'before';
-      $('countBox').hidden = !before;
-      if (before) $('countL').textContent = countdown(st.msToStart);
-      if (player) {
-        $('hello').innerHTML = `Hej, <b>${esc(player.n)}</b> · Person ${player.p}/${T.PEOPLE}`;
-        $('status').innerHTML = before ? `Turen starter om <span class="amb">${countdown(st.msToStart)}</span>`
-          : st.phase === 'after' ? `Turen er slut · <span class="amb">viser sidste dag</span>`
-          : `Din kategori i dag · <span class="amb">${esc(cat ? cat.name : '')}</span>`;
-      }
+
+    // ── Choice screen ──
+    function renderChoices() {
+      const last = store.get(KEY_MODE);
+      $('choices').innerHTML = MODES.map((m, i) => `<button class="choice${m.id === last ? ' last' : ''}" data-mode="${esc(m.id)}">` +
+        `<span class="ci">${pad(i + 1)}</span><span class="ct"><span class="cn">${esc(m.name)}</span><span class="cs mono">${esc(m.sub)}</span></span>` +
+        `<span class="ca" aria-hidden="true">→</span>${m.id === last ? '<span class="tag">Sidst</span>' : ''}</button>`).join('');
+      $('fuckitBtn').classList.toggle('last', last === FUCKIT.id);
+      $('fuckitBtn').querySelector('.tag').hidden = last !== FUCKIT.id;
+      if (player) $('helloC').innerHTML = `Hej, <b>${esc(player.n)}</b>`;
     }
-    // The day flips at midnight Bucharest time, but never in the middle of a spin or an open result
-    const busy = () => spinning || resultTimer || $('resultOverlay').classList.contains('show');
-    function tickClock() {
-      trip = T.state(now());
-      if (player && trip.day !== shownDay) { if (busy()) pendingDay = true; else applyDay(true); }
-      readouts();
+    function choose(id) {
+      if (busy || !player) return;
+      const m = id === FUCKIT.id ? FUCKIT : MODES.find(x => x.id === id);
+      if (!m) return;
+      closeResult(false);
+      mode = m; fkCat = null; store.set(KEY_MODE, m.id);
+      if (m.id === FUCKIT.id) setWheel(catItems(), 'cats'); else setWheel(m.items, 'items');
+      renderHead();
+      go('wheel');
+      requestAnimationFrame(() => { layout = null; drawWheel(); fitToday(); });
+      haptic(); SFX.init(); SFX.soft();
+    }
+    function backToChoices() {
+      if (busy) return;
+      closeResult(false);
+      highlight = -1; stage.classList.remove('won');
+      renderChoices();
+      go('choose'); haptic();
     }
 
     // ── Login ──
@@ -955,23 +1105,23 @@
       const f = $('code'); f.classList.remove('invalid'); void f.offsetWidth; f.classList.add('invalid');
     }
     function clearErr() { $('codeErr').classList.remove('show'); $('code').classList.remove('invalid'); }
-    function setBusy(on) { $('unlockBtn').disabled = on; $('unlockTxt').textContent = on ? 'Dekrypterer…' : 'Lås op'; }
+    function setUnlockBusy(on) { $('unlockBtn').disabled = on; $('unlockTxt').textContent = on ? 'Dekrypterer…' : 'Lås op'; }
 
     async function tryUnlock(raw, silent = false) {
       const code = normCode(raw);
       if (!code) { if (!silent) { showErr('Skriv din kode'); SFX.error(); } return; }
       if (!window.crypto || !crypto.subtle) { showErr('Siden skal åbnes via https'); return; }
-      clearErr(); setBusy(true);
+      clearErr(); setUnlockBusy(true);
       let p = null;
       try { p = await openCode(code); }
-      catch (e) { setBusy(false); showErr(e.message === 'nodata' ? 'Data mangler (data.js)' : 'Noget gik galt – prøv igen'); return; }
-      setBusy(false);
+      catch (e) { setUnlockBusy(false); showErr(e.message === 'nodata' ? 'Data mangler (data.js)' : 'Noget gik galt – prøv igen'); return; }
+      setUnlockBusy(false);
       if (!p) {
         if (silent) { store.del(KEY_CODE); return; }
         showErr('Forkert kode'); SFX.error(); haptic(30); return;
       }
       const num = Number(p.p);
-      if (!Number.isInteger(num) || num < 1 || num > T.PEOPLE) {
+      if (!Number.isInteger(num) || num < 1 || num > PEOPLE) {
         if (silent) { store.del(KEY_CODE); return; }
         showErr('Koden er fra en gammel data.js – byg en ny i builder.html'); return;
       }
@@ -980,22 +1130,22 @@
     }
 
     function enter(p, silent) {
-      player = p; cat = null;
-      trip = T.state(now());
+      player = p; mode = null; fkCat = null; lastResult = null;
+      recent.length = 0; renderRecent();
       rot = rand() * 360; canvas.style.transform = `rotate(${rot}deg)`;
-      applyDay(false);
-      go('wheel');
-      requestAnimationFrame(() => { layout = null; drawWheel(); fitToday(); });
+      renderChoices();
+      go('choose');
       if (!silent) { SFX.unlock(); haptic(); }
     }
 
     function lock() {
       haptic();
-      cancelAnimationFrame(raf); if (spinning) { setSpinUI(false); SFX.droneStop(true); }
+      runId++; cancelAnimationFrame(raf);
+      stage.classList.remove('spinning', 'won'); canvas.classList.remove('swap-out'); halo.style.opacity = '';
+      SFX.droneStop(true); setBusy(false);
       store.del(KEY_CODE);
-      pendingDay = false;
       closeResult(false);
-      player = null; cat = null; lastResult = null;
+      player = null; mode = null; fkCat = null; lastResult = null; recent.length = 0;
       $('code').value = '';
       go('login');
     }
@@ -1003,34 +1153,32 @@
     // ── Wire up ──
     $('ghost').innerHTML = ringSVG({ ticks: 180, every: 15, len: 2.2, majorLen: 5, minor: 'rgba(255,190,140,.16)', major: 'rgba(255,170,100,.4)', inner: [[78, 'rgba(116,212,207,.12)'], [52, 'rgba(235,227,213,.06)']] });
     $('bezel').innerHTML = ringSVG({ ticks: 120, every: 10, len: 2.4, majorLen: 4.6, inner: [[92.2, 'rgba(235,227,213,.1)']] });
-    const d1 = T.dateOfDay(1), dN = T.dateOfDay(T.DAYS);
-    $('tripDates').innerHTML = `<b>${pad(d1.d)}–${pad(dN.d)}.${pad(dN.m)}.${dN.y}</b> · București · ${T.DAYS} dage`;
-    if (testDate) {
-      const href = location.pathname;
-      document.querySelectorAll('.test-slot').forEach(el => { el.innerHTML = `<a class="test-chip" href="${esc(href)}">Testdato ✕</a>`; });
-      toast(`Testtilstand · simuleret dato ${testDate}`, 3600);
-    }
+    $('tripLabel').textContent = (M && M.tripLabel) || '';
     renderSoundBtn();
-    readouts();
+    tickClock();
     (window.requestIdleCallback || (f => setTimeout(f, 60)))(textures);
 
     $('unlockBtn').onclick = () => { SFX.init(); tryUnlock($('code').value); };
     $('code').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); SFX.init(); tryUnlock($('code').value); } });
     $('code').addEventListener('input', clearErr);
+    $('choices').addEventListener('click', e => { const b = e.target.closest('[data-mode]'); if (b) choose(b.dataset.mode); });
+    $('fuckitBtn').onclick = () => choose(FUCKIT.id);
+    $('skiftBtn').onclick = backToChoices;
     $('spinBtn').onclick = spin;
     $('hub').onclick = spin;
     $('againBtn').onclick = () => { haptic(); spin(); };
-    $('lockBtn').onclick = lock;
-    $('soundBtn').onclick = () => {
+    $$('.js-lock').forEach(b => { b.onclick = lock; });
+    $$('.js-sound').forEach(b => { b.onclick = () => {
       SFX.on = !SFX.on; renderSoundBtn(); haptic();
-      if (SFX.on) { SFX.init(); SFX.tick(.3); if (spinning) SFX.droneStart(); }
-    };
+      if (SFX.on) { SFX.init(); SFX.tick(.3); if (stage.classList.contains('spinning')) SFX.droneStart(); }
+    }; });
     $('resultOverlay').addEventListener('click', e => { if (e.target === $('resultOverlay')) closeResult(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('resultOverlay').classList.contains('show')) closeResult(); });
     $('shareBtn').onclick = async () => {
       haptic();
       if (!lastResult || !player) return;
-      const text = `Operation Bucharest · Dag ${lastResult.day} · ${lastResult.cat}\n${player.n}: ${lastResult.place.name}`;
+      const label = lastResult.fk ? `Fuck it → ${lastResult.cat}` : lastResult.cat;
+      const text = `Operation Bucharest · ${label}\n${player.n}: ${lastResult.place.name}`;
       if (navigator.share) {
         try { await navigator.share({ text }); return; }
         catch (e) { if (e && e.name === 'AbortError') return; }
@@ -1047,14 +1195,14 @@
 
     setInterval(tickClock, 1000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) tickClock(); });
-    window.addEventListener('pageshow', tickClock);
 
     const standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
     if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !standalone) $('a2hs').classList.add('show');
 
-    if (!DATA) showErr('Data mangler (data.js)');
+    if (!MODES.length) showErr('Menuen mangler (menu.js)');
+    else if (!DATA) showErr('Data mangler (data.js)');
     const saved = store.get(KEY_CODE);
-    if (saved && DATA) tryUnlock(saved, true);
+    if (saved && DATA && MODES.length) tryUnlock(saved, true);
   }
   </script>
 </body>
