@@ -456,7 +456,6 @@
           <div class="hello-row rise" style="--i:1">
             <p class="hello mono" id="helloC"></p>
             <div class="head-btns">
-              <button class="sq js-sound" aria-label="Lyd til eller fra"></button>
               <button class="sq js-lock" aria-label="Skift kode">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><rect x="5" y="11" width="14" height="9"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               </button>
@@ -488,7 +487,6 @@
           <div class="hello-row rise" style="--i:1">
             <button class="skift mono" id="skiftBtn" aria-label="Skift kategori">Skift ↺</button>
             <div class="head-btns">
-              <button class="sq js-sound" aria-label="Lyd til eller fra"></button>
               <button class="sq js-lock" aria-label="Skift kode">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><rect x="5" y="11" width="14" height="9"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
               </button>
@@ -582,7 +580,17 @@
     const PEOPLE = (M && M.people) || 5;
     const PER = Math.max(2, Math.min(16, Math.round(Number(M && M.perWheel)) || 12));   // slices per wheel
     const catItems = () => MODES.map(m => ({ name: m.name, wheel: m.name }));
-    const DAIQUIRI = /^daiquiri$/i;                                       // this result plays assets/sounds/daiquiri.mp3
+    // Result sounds: Daiquiri → its clip, 5 times; Long Island Iced Tea → the voice clip; a shot → the voice clip 1 time
+    // in 10; anything else → the usual chord. The clips are in assets/sounds (see SFX).
+    const DAIQUIRI = /^daiquiri$/i, LONG_ISLAND = /^long island iced tea$/i;
+    const SHOT_VOICE_ODDS = .1;
+    function resultSound(name, catId) {
+      name = String(name).trim();
+      if (DAIQUIRI.test(name)) return 'daiquiri';
+      if (LONG_ISLAND.test(name)) return 'voice';
+      if (catId === 'shots' && rand() < SHOT_VOICE_ODDS) return 'voice';
+      return 'win';
+    }
 
     // ── Fair draws (crypto.getRandomValues) ──
     const pickSlice = n => Math.floor(rand() * n);                       // every slice equally likely
@@ -788,21 +796,30 @@
       return { prefetch, prime, play };
     })();
 
-    // ── Sound: soft, deep synth voices, generated live. One file: the Daiquiri result (assets/sounds) ──
+    // ── Sound: soft, deep synth voices, generated live, and two recorded clips (assets/sounds). Always on: no mute button ──
+    store.del(KEY_SOUND);                                                 // the old on/off setting, from when there was a button
     const SFX = (() => {
       let ctx = null, out = null, send = null, bus = null, drone = null, noise = null;
-      let on = store.get(KEY_SOUND) !== '0';
-      // Daiquiri: fetched at start, decoded once the sound is on. The file is mastered loud, so it plays turned down.
-      // It plays 5 times back to back; a new spin, sound off or logging out cuts it short.
-      const DAIQ_GAIN = .3, DAIQ_TIMES = 5;
-      let daiqBytes = null, daiqBuf = null, daiq = null;
-      function decodeDaiquiri() {
-        if (!ctx || !daiqBytes || daiqBuf) return;
-        const bytes = daiqBytes; daiqBytes = null;
-        try { ctx.decodeAudioData(bytes, b => { daiqBuf = b; }, err => console.info('daiquiri.mp3 kunne ikke afkodes', err)); } catch (e) {}
+      // The clips: fetched at start, decoded once sound has started (the first tap). Both files are mastered loud, so they
+      // play turned down; at .3 both come out equally loud (measured: about -9.5 LUFS each). A clip plays to the end;
+      // only a new spin cuts it short (see clip / clipStop).
+      const CLIPS = {
+        daiquiri: { url: 'assets/sounds/daiquiri.mp3', gain: .3, times: 5 },                                   // 5 times back to back
+        voice: { url: 'assets/sounds/voice-random-10to15precentchangesound.mp3', gain: .3, times: 1 }
+      };
+      let clip = null;                                                     // the clip playing now
+      function decodeClips() {
+        if (!ctx) return;
+        for (const c of Object.values(CLIPS)) {
+          if (!c.bytes || c.buf) continue;
+          const bytes = c.bytes; c.bytes = null;
+          try { ctx.decodeAudioData(bytes, b => { c.buf = b; }, err => console.info(`${c.url} kunne ikke afkodes`, err)); } catch (e) {}
+        }
       }
-      fetch('assets/sounds/daiquiri.mp3').then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error('HTTP ' + r.status)))
-        .then(b => { daiqBytes = b; decodeDaiquiri(); }).catch(err => console.info('daiquiri.mp3:', (err && err.message) || err));
+      for (const c of Object.values(CLIPS)) {
+        fetch(c.url).then(r => r.ok ? r.arrayBuffer() : Promise.reject(new Error('HTTP ' + r.status)))
+          .then(b => { c.bytes = b; decodeClips(); }).catch(err => console.info(`${c.url}:`, (err && err.message) || err));
+      }
       function impulse(sec, decay) {
         const len = Math.floor(ctx.sampleRate * sec), buf = ctx.createBuffer(2, len, ctx.sampleRate);
         for (let ch = 0; ch < 2; ch++) {
@@ -812,7 +829,6 @@
         return buf;
       }
       function init() {
-        if (!on) return null;
         if (!ctx) {
           const AC = window.AudioContext || window.webkitAudioContext;
           if (!AC) return null;
@@ -831,10 +847,10 @@
           const nd = noise.getChannelData(0); for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
         }
         if (ctx.state === 'suspended') ctx.resume().catch(() => {});
-        decodeDaiquiri();
+        decodeClips();
         return ctx;
       }
-      const live = () => on && ctx && ctx.state !== 'closed';
+      const live = () => ctx && ctx.state !== 'closed';
       function route(node, wet = .25) { node.connect(out); if (wet) { const g = ctx.createGain(); g.gain.value = wet; node.connect(g).connect(send); } }
       function env(g, t, a, peak, d) {
         g.gain.setValueAtTime(.0001, t);
@@ -852,8 +868,6 @@
         o.start(t); o.stop(t + a + d + .05);
       }
       return {
-        get on() { return on; },
-        set on(v) { on = v; store.set(KEY_SOUND, v ? '1' : '0'); if (!v) { this.droneStop(true); this.daiqStop(); } },
         init,
         tick(sp = .5) {
           if (!live()) return;
@@ -899,26 +913,28 @@
           voice({ type: 'sine', f: 880, t: t + .35, a: .01, peak: .035, d: 2.6, wet: .8 });
           voice({ type: 'sine', f: 1318.5, t: t + .5, a: .01, peak: .022, d: 2.4, wet: .8 });
         },
-        daiquiri() {                                               // instead of win() when the result is Daiquiri
+        clip(name) {                                               // a recorded clip (CLIPS), instead of win()
           if (!live()) return;
-          if (!daiqBuf) { this.win(); return; }                    // file not loaded: the usual result sound
-          this.daiqStop();
+          const c = CLIPS[name];
+          if (!c || !c.buf) { this.win(); return; }                // file not loaded: the usual result sound
+          this.clipStop();
           const g = ctx.createGain(), w = ctx.createGain(), t = ctx.currentTime + .03;
-          g.gain.value = DAIQ_GAIN; w.gain.value = .12;
+          g.gain.value = c.gain; w.gain.value = .12;
           g.connect(bus); g.connect(w).connect(send);
           const srcs = [];
-          for (let i = 0; i < DAIQ_TIMES; i++) {                   // back to back: each copy starts as the one before ends
-            const s = ctx.createBufferSource(); s.buffer = daiqBuf; s.connect(g);
-            s.start(t + i * daiqBuf.duration); srcs.push(s);
+          for (let i = 0; i < c.times; i++) {                      // back to back: each copy starts as the one before ends
+            const s = ctx.createBufferSource(); s.buffer = c.buf; s.connect(g);
+            s.start(t + i * c.buf.duration); srcs.push(s);
           }
-          srcs[srcs.length - 1].onended = () => { if (daiq && daiq.g === g) daiq = null; };
-          daiq = { g, srcs };
+          const now = { g, srcs, gain: c.gain };
+          srcs[srcs.length - 1].onended = () => { if (clip === now) clip = null; };
+          clip = now;
         },
-        daiqStop() {                                               // cut the Daiquiri repeats short, with a quick fade
-          if (!daiq || !ctx) return;
-          const t = ctx.currentTime, d = daiq; daiq = null;
-          d.g.gain.cancelScheduledValues(t); d.g.gain.setValueAtTime(DAIQ_GAIN, t); d.g.gain.setTargetAtTime(.0001, t, .03);
-          d.srcs.forEach(s => { try { s.stop(t + .2); } catch (e) {} });
+        clipStop() {                                               // a new spin: cut the clip short, with a quick fade
+          if (!clip || !ctx) return;
+          const t = ctx.currentTime, c = clip; clip = null;
+          c.g.gain.cancelScheduledValues(t); c.g.gain.setValueAtTime(c.gain, t); c.g.gain.setTargetAtTime(.0001, t, .03);
+          c.srcs.forEach(s => { try { s.stop(t + .2); } catch (e) {} });
         },
         unlock() {
           if (!live()) return;
@@ -949,9 +965,6 @@
         soft() { if (live()) voice({ type: 'sine', f: 330, f2: 220, glide: .2, t: ctx.currentTime, a: .01, peak: .08, d: .5, wet: .5 }); }
       };
     })();
-    const ICON_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/></svg>';
-    const ICON_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="m16 10 4 4M20 10l-4 4"/></svg>';
-    function renderSoundBtn() { $$('.js-sound').forEach(b => { b.innerHTML = SFX.on ? ICON_ON : ICON_OFF; b.setAttribute('aria-pressed', String(SFX.on)); }); }
 
     // ── Atmosphere textures (generated once, tiled by CSS) ──
     function textures() {
@@ -1234,7 +1247,7 @@
       return new Promise(resolve => {
         const reduced = reducedMQ.matches;
         highlight = -1; stage.classList.remove('won'); drawWheel();
-        stage.classList.add('spinning'); SFX.daiqStop(); SFX.whoosh(); SFX.droneStart();
+        stage.classList.add('spinning'); SFX.whoosh(); SFX.droneStart();
         const idx = pickSlice(N);                                // fair: every slice equally likely
         const start = rot, end = landing(idx, N, rot, turns);    // stops well inside that slice
         const t0 = performance.now(), ease = reduced ? (t => 1 - Math.pow(1 - t, 3)) : EASE;
@@ -1264,7 +1277,7 @@
       if (busy || !player || !mode || !N) return;
       closeResult(false);
       const id = ++runId, reduced = reducedMQ.matches;
-      SFX.init(); haptic(15); setBusy(true);
+      SFX.init(); SFX.clipStop(); haptic(15); setBusy(true);      // spinning again is the only thing that stops a clip
       try {
         if (mode.id === FUCKIT.id) {
           // Stage 1: the category wheel picks Øl / Shots / Drinks (equal odds)
@@ -1295,7 +1308,8 @@
 
     function done(idx, cat, fk) {
       highlight = idx; spent = true; drawWheel(); pulse();
-      if (DAIQUIRI.test(places[idx].name.trim())) SFX.daiquiri(); else SFX.win();   // Daiquiri has its own sound, instead of the chord
+      const sound = resultSound(places[idx].name, cat.id);         // a clip instead of the chord: see resultSound
+      if (sound === 'win') SFX.win(); else SFX.clip(sound);
       haptic([20, 40, 20]);
       lastResult = { idx, n: N, place: places[idx], cat: cat.name, fk };
       remember(cat.id, places[idx].name);
@@ -1427,7 +1441,7 @@
       stage.classList.remove('spinning', 'won'); canvas.classList.remove('swap-out'); halo.style.opacity = '';
       snap.classList.remove('fade'); snap.style.opacity = '0'; snap.width = snap.height = 0;
       try { snap.getAnimations().forEach(a => a.cancel()); } catch (e) {}
-      SFX.droneStop(true); SFX.daiqStop(); setBusy(false);
+      SFX.droneStop(true); setBusy(false);                         // a clip still playing plays to the end
       store.del(KEY_CODE);
       closeResult(false);
       player = null; mode = null; fkCat = null; lastResult = null; recent.length = 0;
@@ -1435,7 +1449,7 @@
       go('login'); GREET.prefetch();
     }
 
-    // ── Console checks: OB_SIM.spins(1000) · OB_SIM.draws('beer', 20000) · OB_SIM.fuckit(900) ──
+    // ── Console checks: OB_SIM.spins(1000) · OB_SIM.draws('beer', 20000) · OB_SIM.fuckit(900) · OB_SIM.sounds(20000) ──
     // Same draw and landing code as the wheel; they keep their own history and change nothing on the page.
     const chi2 = (counts, e) => +counts.reduce((s, c) => s + (c - e) ** 2 / e, 0).toFixed(1);
     const cutoff = df => +(df * (1 - 2 / (9 * df) + 3.09 * Math.sqrt(2 / (9 * df))) ** 3).toFixed(1);   // chi² at p = 0.001
@@ -1473,6 +1487,19 @@
         const out = Object.fromEntries(MODES.map((m, i) => [m.name, cats[i]]));
         console.table(out);
         return { runs: n, ...out, expected: +(n / MODES.length).toFixed(1), chi2: chi2(cats, n / MODES.length), cutoff: cutoff(MODES.length - 1) };
+      },
+      sounds(n = 20000) {                                                  // the result sound for n shots, and for every pool item
+        const shots = MODES.find(x => x.id === 'shots');
+        if (!shots) return 'Ingen kategori med id "shots"';
+        let voice = 0;
+        for (let i = 0; i < n; i++) if (resultSound(shots.items[pickSlice(shots.items.length)].name, 'shots') === 'voice') voice++;
+        const e = n * SHOT_VOICE_ODDS, always = {};
+        for (const m of MODES) for (const x of m.items) {                  // what each item gets apart from the shot odds
+          const s = resultSound(x.name, m.id === 'shots' ? 'other' : m.id);
+          if (s !== 'win') always[x.name] = s;
+        }
+        return { shots: n, voice, pct: +(100 * voice / n).toFixed(2), expectedPct: 100 * SHOT_VOICE_ODDS,
+          z: +((voice - e) / Math.sqrt(e * (1 - SHOT_VOICE_ODDS))).toFixed(2), always };   // |z| under 3.3: as expected
       }
     };
 
@@ -1480,7 +1507,6 @@
     $('ghost').innerHTML = ringSVG({ ticks: 180, every: 15, len: 2.2, majorLen: 5, minor: 'rgba(255,190,140,.16)', major: 'rgba(255,170,100,.4)', inner: [[78, 'rgba(116,212,207,.12)'], [52, 'rgba(235,227,213,.06)']] });
     $('bezel').innerHTML = ringSVG({ ticks: 120, every: 10, len: 2.4, majorLen: 4.6, inner: [[92.2, 'rgba(235,227,213,.1)']] });
     $('tripLabel').textContent = (M && M.tripLabel) || '';
-    renderSoundBtn();
     tickClock(); tickTrip();
     (window.requestIdleCallback || (f => setTimeout(f, 60)))(textures);
 
@@ -1494,10 +1520,6 @@
     $('hub').onclick = spin;
     $('againBtn').onclick = () => { haptic(); spin(); };
     $$('.js-lock').forEach(b => { b.onclick = lock; });
-    $$('.js-sound').forEach(b => { b.onclick = () => {
-      SFX.on = !SFX.on; renderSoundBtn(); haptic();
-      if (SFX.on) { SFX.init(); SFX.tick(.3); if (stage.classList.contains('spinning')) SFX.droneStart(); }
-    }; });
     $('resultOverlay').addEventListener('click', e => { if (e.target === $('resultOverlay')) closeResult(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('resultOverlay').classList.contains('show')) closeResult(); });
     $('shareBtn').onclick = async () => {
