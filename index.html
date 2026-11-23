@@ -721,7 +721,8 @@
       }
 
       // Show it for person p, whose code was just accepted. It cannot be skipped. Returns null when there is nothing to show,
-      // else a promise that resolves when it is over (played to the end, or not possible), as the overlay starts to fade.
+      // else a promise that resolves when it is over, as the overlay starts to fade: true if it played to the end,
+      // false if it could not be shown.
       function play(code, p) {
         if (seen() || failed || busy || !files || !usable()) return null;
         busy = true;
@@ -738,7 +739,7 @@
             video.onended = video.onerror = video.onplaying = video.onpause = null; tapBtn.onclick = null;
             try { video.pause(); } catch (e) {}
             screens.inert = false;
-            resolve();                                                   // the next screen comes in under the fade
+            resolve(!err);                                               // the next screen comes in under the fade
             const clear = () => {
               el.hidden = true; el.classList.remove('out'); busy = false;
               video.removeAttribute('src'); try { video.load(); } catch (e) {}
@@ -1407,7 +1408,7 @@
       }
       const who = { n: String(p.n || 'Agent'), p: num };
       const greeting = silent ? null : GREET.play(code, num);           // typed code: the greeting video first (once per tab)
-      if (greeting) greeting.then(() => { store.set(KEY_CODE, code); enter(who, false, true); });   // code kept once it is over
+      if (greeting) greeting.then(played => { store.set(KEY_CODE, code); enter(who, false, played); });   // code kept once it is over
       else { store.set(KEY_CODE, code); enter(who, silent); }
     }
 
