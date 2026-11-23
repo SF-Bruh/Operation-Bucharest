@@ -792,8 +792,9 @@
       let ctx = null, out = null, send = null, bus = null, drone = null, noise = null;
       let on = store.get(KEY_SOUND) !== '0';
       // Daiquiri: fetched at start, decoded once the sound is on. The file is mastered loud, so it plays turned down.
-      const DAIQ_GAIN = .3;
-      let daiqBytes = null, daiqBuf = null;
+      // It plays 5 times back to back; a new spin, sound off or logging out cuts it short.
+      const DAIQ_GAIN = .3, DAIQ_TIMES = 5;
+      let daiqBytes = null, daiqBuf = null, daiq = null;
       function decodeDaiquiri() {
         if (!ctx || !daiqBytes || daiqBuf) return;
         const bytes = daiqBytes; daiqBytes = null;
@@ -851,7 +852,7 @@
       }
       return {
         get on() { return on; },
-        set on(v) { on = v; store.set(KEY_SOUND, v ? '1' : '0'); if (!v) this.droneStop(true); },
+        set on(v) { on = v; store.set(KEY_SOUND, v ? '1' : '0'); if (!v) { this.droneStop(true); this.daiqStop(); } },
         init,
         tick(sp = .5) {
           if (!live()) return;
@@ -900,10 +901,23 @@
         daiquiri() {                                               // instead of win() when the result is Daiquiri
           if (!live()) return;
           if (!daiqBuf) { this.win(); return; }                    // file not loaded: the usual result sound
-          const s = ctx.createBufferSource(), g = ctx.createGain(), w = ctx.createGain();
-          s.buffer = daiqBuf; g.gain.value = DAIQ_GAIN; w.gain.value = .12;
-          s.connect(g).connect(bus); g.connect(w).connect(send);
-          s.start(ctx.currentTime + .03);
+          this.daiqStop();
+          const g = ctx.createGain(), w = ctx.createGain(), t = ctx.currentTime + .03;
+          g.gain.value = DAIQ_GAIN; w.gain.value = .12;
+          g.connect(bus); g.connect(w).connect(send);
+          const srcs = [];
+          for (let i = 0; i < DAIQ_TIMES; i++) {                   // back to back: each copy starts as the one before ends
+            const s = ctx.createBufferSource(); s.buffer = daiqBuf; s.connect(g);
+            s.start(t + i * daiqBuf.duration); srcs.push(s);
+          }
+          srcs[srcs.length - 1].onended = () => { if (daiq && daiq.g === g) daiq = null; };
+          daiq = { g, srcs };
+        },
+        daiqStop() {                                               // cut the Daiquiri repeats short, with a quick fade
+          if (!daiq || !ctx) return;
+          const t = ctx.currentTime, d = daiq; daiq = null;
+          d.g.gain.cancelScheduledValues(t); d.g.gain.setValueAtTime(DAIQ_GAIN, t); d.g.gain.setTargetAtTime(.0001, t, .03);
+          d.srcs.forEach(s => { try { s.stop(t + .2); } catch (e) {} });
         },
         unlock() {
           if (!live()) return;
@@ -1219,7 +1233,7 @@
       return new Promise(resolve => {
         const reduced = reducedMQ.matches;
         highlight = -1; stage.classList.remove('won'); drawWheel();
-        stage.classList.add('spinning'); SFX.whoosh(); SFX.droneStart();
+        stage.classList.add('spinning'); SFX.daiqStop(); SFX.whoosh(); SFX.droneStart();
         const idx = pickSlice(N);                                // fair: every slice equally likely
         const start = rot, end = landing(idx, N, rot, turns);    // stops well inside that slice
         const t0 = performance.now(), ease = reduced ? (t => 1 - Math.pow(1 - t, 3)) : EASE;
@@ -1412,7 +1426,7 @@
       stage.classList.remove('spinning', 'won'); canvas.classList.remove('swap-out'); halo.style.opacity = '';
       snap.classList.remove('fade'); snap.style.opacity = '0'; snap.width = snap.height = 0;
       try { snap.getAnimations().forEach(a => a.cancel()); } catch (e) {}
-      SFX.droneStop(true); setBusy(false);
+      SFX.droneStop(true); SFX.daiqStop(); setBusy(false);
       store.del(KEY_CODE);
       closeResult(false);
       player = null; mode = null; fkCat = null; lastResult = null; recent.length = 0;
