@@ -151,6 +151,25 @@
       animation: ghost 240s linear infinite;
     }
     @keyframes ghost { to { transform: rotate(360deg); } }
+    /* Trip status (menu.js tripStart / tripEnd): a countdown, then NU, then a goodbye */
+    .trip { margin-bottom: 24px; }
+    .trip-k { display: block; font-size: 10px; color: var(--bone-3); margin-bottom: 10px; }
+    .trip-cd { display: flex; gap: clamp(16px, 5.4vw, 26px); }
+    .trip-cd span { display: flex; flex-direction: column; gap: 7px; }
+    .trip-cd b { font: 500 clamp(26px, 8.2vw, 34px)/1 var(--f-mono); letter-spacing: .02em; color: var(--bone); font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 26px rgba(255,140,50,.3); }
+    .trip-cd i { font: 500 9px/1 var(--f-mono); font-style: normal; letter-spacing: .16em; text-transform: uppercase; color: var(--bone-3); }
+    .trip-now { display: flex; align-items: center; gap: 14px; font-weight: 700; font-stretch: 125%; font-size: clamp(34px, 11vw, 46px); line-height: 1;
+      color: var(--amber-hi); text-shadow: 0 0 34px rgba(255,140,50,.6); }
+    .trip-now::before, .trip-line .nu::before { content: ''; flex: none; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--amber); box-shadow: 0 0 12px var(--amber); animation: live 2.6s ease-in-out infinite; }
+    .trip-bye { font-size: 18px; line-height: 1.35; font-weight: 500; color: var(--bone); max-width: 26ch; text-wrap: balance; }
+    .trip-line { margin-top: 12px; font: 500 10.5px/1.4 var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--bone-3); }
+    .trip-line b { color: var(--amber-hi); font-weight: 500; }
+    .trip-line .nu { display: inline-flex; align-items: center; gap: 9px; font-size: 13px; }
+    .trip-line .nu::before { width: 6px; height: 6px; }
+    .trip-line.bye { font: 500 15px/1.35 var(--f-wide); letter-spacing: 0; text-transform: none; color: var(--amber-hi); }
+    .trip-line:not([hidden]) + .ask { margin-top: 6px; }
     .kicker { font-size: 10.5px; color: var(--bone-3); margin-bottom: 18px; }
     .kicker b { color: var(--amber-hi); font-weight: 500; }
     .title {
@@ -367,12 +386,17 @@
       .lede { margin-top: 14px; }
       .kicker { margin-bottom: 12px; }
       .recent { margin-top: 8px; }
+      .trip { margin-bottom: 14px; }
+      .trip-k { margin-bottom: 7px; }
+      .trip-cd b { font-size: 24px; }
+      .trip-now { font-size: 32px; }
+      .trip-line { margin-top: 8px; }
     }
     @media (max-height: 640px) { .ask { margin-top: 8px; } .choose-main { padding: 10px 0; } .choices { gap: 8px; } }
     @media (max-height: 560px) { .lede, .ask-sub { display: none; } .btn { min-height: 52px; } .choice { min-height: 56px; } .fuckit { min-height: 70px; } }
 
     @media (prefers-reduced-motion: reduce) {
-      .haze, .dust, .grain, .ghost, .live, .halo, .stage.spinning .shimmer { animation: none !important; }
+      .haze, .dust, .grain, .ghost, .live, .halo, .stage.spinning .shimmer, .trip-now::before, .trip-line .nu::before { animation: none !important; }
       .screen.on .rise, .sheet-overlay.show .sheet > * { animation: none; }
       .screen, .screen.on { transform: none; transition: opacity .3s, visibility 0s; }
       .stage.won .flash { animation: none; }
@@ -400,6 +424,7 @@
         </header>
         <div class="login-main">
           <div class="ghost" id="ghost" aria-hidden="true"></div>
+          <div class="trip rise" style="--i:1" id="tripL" role="timer" hidden></div>
           <p class="kicker mono rise" style="--i:1"><b id="tripLabel"></b></p>
           <h1 class="title rise" style="--i:2"><span>Operation</span><span>Bucharest</span></h1>
           <p class="lede rise" style="--i:3">Indtast din personlige kode for at fortsætte.</p>
@@ -437,6 +462,7 @@
               </button>
             </div>
           </div>
+          <p class="trip-line rise" style="--i:2" id="tripC" role="timer" hidden></p>
           <h1 class="ask rise" style="--i:2">Hvad skal du have?</h1>
           <p class="ask-sub rise" style="--i:3">Vælg, og lad hjulet bestemme.</p>
         </div>
@@ -601,6 +627,40 @@
     function tickClock() {
       const t = clockFmt ? clockFmt.format(new Date()) : new Date().toTimeString().slice(0, 8);
       $$('.js-clock').forEach(el => { el.innerHTML = `<b>BUC ${t}</b>`; });
+    }
+
+    // ── Trip status (menu.js tripStart / tripEnd, Danish time): a countdown, then "NU", then a goodbye ──
+    // Big on the login screen (before the date), one line on the choice screen.
+    const TRIP_START = Date.parse(M && M.tripStart), TRIP_END = Date.parse(M && M.tripEnd);
+    const TRIP_BYE = 'Det var det. Tak for en god tur, boys.';
+    let tripState = '';
+    function tickTrip() {
+      if (!Number.isFinite(TRIP_START)) return;                          // no date in menu.js: nothing shown
+      const now = Date.now();
+      const state = now < TRIP_START ? 'wait' : Number.isFinite(TRIP_END) && now >= TRIP_END ? 'bye' : 'now';
+      const L = $('tripL'), C = $('tripC');
+      if (state !== tripState) {
+        tripState = state;
+        L.hidden = C.hidden = false;
+        C.classList.toggle('bye', state === 'bye');
+        if (state === 'wait') {
+          L.innerHTML = '<span class="trip-k mono">Starter om</span><span class="trip-cd">'
+            + ['dage', 'timer', 'min', 'sek'].map(u => `<span><b></b><i>${u}</i></span>`).join('') + '</span>';
+          C.innerHTML = 'Starter om <b></b>';
+        } else if (state === 'now') {
+          L.innerHTML = '<span class="trip-now">NU</span>';
+          C.innerHTML = '<b class="nu">NU</b>';
+        } else {
+          L.innerHTML = `<p class="trip-bye">${TRIP_BYE}</p>`;
+          C.textContent = TRIP_BYE;
+        }
+      }
+      if (state !== 'wait') return;
+      const s = Math.ceil((TRIP_START - now) / 1000);                    // whole seconds left; "NU" exactly at the start
+      const d = Math.floor(s / 86400), h = Math.floor(s / 3600) % 24, m = Math.floor(s / 60) % 60, x = s % 60;
+      const nums = [d, h, m, x].map(n => pad(n));
+      L.querySelectorAll('b').forEach((b, i) => { b.textContent = nums[i]; });
+      C.querySelector('b').textContent = (d ? `${d} ${d === 1 ? 'dag' : 'dage'} · ` : '') + `${nums[1]}:${nums[2]}:${nums[3]}`;
     }
 
     // ── Codes: each person's entry is encrypted with their own code (PBKDF2-SHA256 + AES-GCM) ──
@@ -1406,7 +1466,7 @@
     $('bezel').innerHTML = ringSVG({ ticks: 120, every: 10, len: 2.4, majorLen: 4.6, inner: [[92.2, 'rgba(235,227,213,.1)']] });
     $('tripLabel').textContent = (M && M.tripLabel) || '';
     renderSoundBtn();
-    tickClock();
+    tickClock(); tickTrip();
     (window.requestIdleCallback || (f => setTimeout(f, 60)))(textures);
 
     $('unlockBtn').onclick = () => { SFX.init(); GREET.prime(); tryUnlock($('code').value); };
@@ -1444,8 +1504,8 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { layout = null; redraw(); });
     if (document.fonts && document.fonts.load) Promise.all([document.fonts.load(LABEL_FONT(14)), document.fonts.load(MONO_FONT(10))]).then(() => { layout = null; redraw(); }).catch(() => {});
 
-    setInterval(tickClock, 1000);
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) tickClock(); });
+    setInterval(() => { tickClock(); tickTrip(); }, 1000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) { tickClock(); tickTrip(); } });
 
     const standalone = navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
     if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !standalone) $('a2hs').classList.add('show');

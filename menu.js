@@ -1,6 +1,8 @@
 window.OB_MENU = {
   people: 5,
   tripLabel: '26.–29.11.2026 · București',   // static line on the login screen
+  tripStart: '2026-11-26T18:30:00+01:00',    // countdown until here (Danish time), then "NU"
+  tripEnd: '2026-11-29T00:00:00+01:00',      // from here: "Det var det. Tak for en god tur, boys."
   perWheel: 12,                              // slices drawn from each pool per wheel
   modes: [
     { id: 'beer', name: 'Øl', unit: 'mærker', items: [
