@@ -7,3 +7,6 @@
 # Codes in plain text: the local file tools/encrypt-greeting.mjs reads, and the builder's saved setup.
 *.local.json
 operation-bucharest-opsaetning*.json
+
+# Python cache from tools/make_ro_audio.py
+__pycache__/

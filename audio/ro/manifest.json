@@ -1,0 +1,1592 @@
+{
+ "v": 1,
+ "voice": "ro-RO-EmilNeural",
+ "rate": "-5%",
+ "format": "audio-24khz-48kbitrate-mono-mp3",
+ "files": {
+  "beer-affligem.mp3": {
+   "category": "beer",
+   "name": "Affligem",
+   "ro": "Bună! Aș dori o bere Affligem, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Affligem, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-albacher.mp3": {
+   "category": "beer",
+   "name": "Albacher",
+   "ro": "Bună! Aș dori o bere Albacher, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Albacher, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-amstel.mp3": {
+   "category": "beer",
+   "name": "Amstel",
+   "ro": "Bună! Aș dori o bere Amstel, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Amstel, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-asahi.mp3": {
+   "category": "beer",
+   "name": "Asahi",
+   "ro": "Bună! Aș dori o bere Asahi, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Asahi, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-azuga-weissbier.mp3": {
+   "category": "beer",
+   "name": "Azuga Weissbier",
+   "ro": "Bună! Aș dori o bere Azuga Weissbier, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Azuga Weissbier, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-azuga.mp3": {
+   "category": "beer",
+   "name": "Azuga",
+   "ro": "Bună! Aș dori o bere Azuga, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Azuga, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-becks.mp3": {
+   "category": "beer",
+   "name": "Beck's",
+   "ro": "Bună! Aș dori o bere Beck's, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Beck's, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-bereta.mp3": {
+   "category": "beer",
+   "name": "Bereta",
+   "ro": "Bună! Aș dori o bere Bereta, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Bereta, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-bergenbier.mp3": {
+   "category": "beer",
+   "name": "Bergenbier",
+   "ro": "Bună! Aș dori o bere Bergenbier, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Bergenbier, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-birra-moretti.mp3": {
+   "category": "beer",
+   "name": "Birra Moretti",
+   "ro": "Bună! Aș dori o bere Birra Moretti, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Birra Moretti, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-bitburger.mp3": {
+   "category": "beer",
+   "name": "Bitburger",
+   "ro": "Bună! Aș dori o bere Bitburger, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Bitburger, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-bucegi.mp3": {
+   "category": "beer",
+   "name": "Bucegi",
+   "ro": "Bună! Aș dori o bere Bucegi, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Bucegi, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-budweiser.mp3": {
+   "category": "beer",
+   "name": "Budweiser",
+   "ro": "Bună! Aș dori o bere Budweiser, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Budweiser, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-burger.mp3": {
+   "category": "beer",
+   "name": "Bürger",
+   "ro": "Bună! Aș dori o bere Bürger, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Bürger, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-carlsberg.mp3": {
+   "category": "beer",
+   "name": "Carlsberg",
+   "ro": "Bună! Aș dori o bere Carlsberg, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Carlsberg, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-chimay.mp3": {
+   "category": "beer",
+   "name": "Chimay",
+   "ro": "Bună! Aș dori o bere Chimay, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Chimay, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ciuc-radler.mp3": {
+   "category": "beer",
+   "name": "Ciuc Radler",
+   "ro": "Bună! Aș dori o bere Ciuc Radler, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ciuc Radler, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ciuc.mp3": {
+   "category": "beer",
+   "name": "Ciuc",
+   "ro": "Bună! Aș dori o bere Ciuc, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ciuc, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ciucas-malzbier.mp3": {
+   "category": "beer",
+   "name": "Ciucaș Malzbier",
+   "ro": "Bună! Aș dori o bere Ciucaș Malzbier, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ciucaș Malzbier, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ciucas.mp3": {
+   "category": "beer",
+   "name": "Ciucaș",
+   "ro": "Bună! Aș dori o bere Ciucaș, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ciucaș, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-corona.mp3": {
+   "category": "beer",
+   "name": "Corona",
+   "ro": "Bună! Aș dori o bere Corona, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Corona, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-delirium.mp3": {
+   "category": "beer",
+   "name": "Delirium",
+   "ro": "Bună! Aș dori o bere Delirium, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Delirium, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-desperados.mp3": {
+   "category": "beer",
+   "name": "Desperados",
+   "ro": "Bună! Aș dori o bere Desperados, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Desperados, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-duvel.mp3": {
+   "category": "beer",
+   "name": "Duvel",
+   "ro": "Bună! Aș dori o bere Duvel, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Duvel, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-efes.mp3": {
+   "category": "beer",
+   "name": "Efes",
+   "ro": "Bună! Aș dori o bere Efes, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Efes, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-erdinger.mp3": {
+   "category": "beer",
+   "name": "Erdinger",
+   "ro": "Bună! Aș dori o bere Erdinger, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Erdinger, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-estrella-damm.mp3": {
+   "category": "beer",
+   "name": "Estrella Damm",
+   "ro": "Bună! Aș dori o bere Estrella Damm, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Estrella Damm, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-franziskaner.mp3": {
+   "category": "beer",
+   "name": "Franziskaner",
+   "ro": "Bună! Aș dori o bere Franziskaner, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Franziskaner, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-gambrinus.mp3": {
+   "category": "beer",
+   "name": "Gambrinus",
+   "ro": "Bună! Aș dori o bere Gambrinus, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Gambrinus, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-golden-brau.mp3": {
+   "category": "beer",
+   "name": "Golden Brau",
+   "ro": "Bună! Aș dori o bere Golden Brau, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Golden Brau, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-grimbergen.mp3": {
+   "category": "beer",
+   "name": "Grimbergen",
+   "ro": "Bună! Aș dori o bere Grimbergen, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Grimbergen, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-grivita.mp3": {
+   "category": "beer",
+   "name": "Grivița",
+   "ro": "Bună! Aș dori o bere Grivița, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Grivița, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-grolsch-weizen.mp3": {
+   "category": "beer",
+   "name": "Grolsch Weizen",
+   "ro": "Bună! Aș dori o bere Grolsch Weizen, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Grolsch Weizen, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-grolsch.mp3": {
+   "category": "beer",
+   "name": "Grolsch",
+   "ro": "Bună! Aș dori o bere Grolsch, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Grolsch, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ground-zero.mp3": {
+   "category": "beer",
+   "name": "Ground Zero",
+   "ro": "Bună! Aș dori o bere Ground Zero, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ground Zero, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-guinness.mp3": {
+   "category": "beer",
+   "name": "Guinness",
+   "ro": "Bună! Aș dori o bere Guinness, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Guinness, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-heineken.mp3": {
+   "category": "beer",
+   "name": "Heineken",
+   "ro": "Bună! Aș dori o bere Heineken, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Heineken, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-hoegaarden.mp3": {
+   "category": "beer",
+   "name": "Hoegaarden",
+   "ro": "Bună! Aș dori o bere Hoegaarden, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Hoegaarden, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-holsten.mp3": {
+   "category": "beer",
+   "name": "Holsten",
+   "ro": "Bună! Aș dori o bere Holsten, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Holsten, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-hop-hooligans.mp3": {
+   "category": "beer",
+   "name": "Hop Hooligans",
+   "ro": "Bună! Aș dori o bere Hop Hooligans, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Hop Hooligans, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-kilkenny.mp3": {
+   "category": "beer",
+   "name": "Kilkenny",
+   "ro": "Bună! Aș dori o bere Kilkenny, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Kilkenny, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-kozel.mp3": {
+   "category": "beer",
+   "name": "Kozel",
+   "ro": "Bună! Aș dori o bere Kozel, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Kozel, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-kronenbourg-1664.mp3": {
+   "category": "beer",
+   "name": "Kronenbourg 1664",
+   "ro": "Bună! Aș dori o bere Kronenbourg 1664, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Kronenbourg 1664, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-krusovice.mp3": {
+   "category": "beer",
+   "name": "Krušovice",
+   "ro": "Bună! Aș dori o bere Krušovice, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Krušovice, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-leffe.mp3": {
+   "category": "beer",
+   "name": "Leffe",
+   "ro": "Bună! Aș dori o bere Leffe, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Leffe, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-lowenbrau.mp3": {
+   "category": "beer",
+   "name": "Löwenbräu",
+   "ro": "Bună! Aș dori o bere Löwenbräu, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Löwenbräu, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-mort-subite-kriek.mp3": {
+   "category": "beer",
+   "name": "Mort Subite Kriek",
+   "ro": "Bună! Aș dori o bere Mort Subite Kriek, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Mort Subite Kriek, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-nenea-iancu.mp3": {
+   "category": "beer",
+   "name": "Nenea Iancu",
+   "ro": "Bună! Aș dori o bere Nenea Iancu, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Nenea Iancu, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-neumarkt.mp3": {
+   "category": "beer",
+   "name": "Neumarkt",
+   "ro": "Bună! Aș dori o bere Neumarkt, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Neumarkt, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-noroc.mp3": {
+   "category": "beer",
+   "name": "Noroc",
+   "ro": "Bună! Aș dori o bere Noroc, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Noroc, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-paulaner.mp3": {
+   "category": "beer",
+   "name": "Paulaner",
+   "ro": "Bună! Aș dori o bere Paulaner, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Paulaner, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-peroni.mp3": {
+   "category": "beer",
+   "name": "Peroni",
+   "ro": "Bună! Aș dori o bere Peroni, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Peroni, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-pilsner-urquell.mp3": {
+   "category": "beer",
+   "name": "Pilsner Urquell",
+   "ro": "Bună! Aș dori o bere Pilsner Urquell, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Pilsner Urquell, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-redds.mp3": {
+   "category": "beer",
+   "name": "Redd's",
+   "ro": "Bună! Aș dori o bere Redd's, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Redd's, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-san-miguel.mp3": {
+   "category": "beer",
+   "name": "San Miguel",
+   "ro": "Bună! Aș dori o bere San Miguel, vă rog.",
+   "da": "Hej! Jeg vil gerne have en San Miguel, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-sikaru.mp3": {
+   "category": "beer",
+   "name": "Sikaru",
+   "ro": "Bună! Aș dori o bere Sikaru, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Sikaru, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-silva-dark.mp3": {
+   "category": "beer",
+   "name": "Silva Dark",
+   "ro": "Bună! Aș dori o bere Silva Dark, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Silva Dark, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-silva.mp3": {
+   "category": "beer",
+   "name": "Silva",
+   "ro": "Bună! Aș dori o bere Silva, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Silva, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-skol.mp3": {
+   "category": "beer",
+   "name": "Skol",
+   "ro": "Bună! Aș dori o bere Skol, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Skol, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-st-stefanus.mp3": {
+   "category": "beer",
+   "name": "St. Stefanus",
+   "ro": "Bună! Aș dori o bere St. Stefanus, vă rog.",
+   "da": "Hej! Jeg vil gerne have en St. Stefanus, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-staropramen.mp3": {
+   "category": "beer",
+   "name": "Staropramen",
+   "ro": "Bună! Aș dori o bere Staropramen, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Staropramen, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-stejar.mp3": {
+   "category": "beer",
+   "name": "Stejar",
+   "ro": "Bună! Aș dori o bere Stejar, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Stejar, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-stella-artois.mp3": {
+   "category": "beer",
+   "name": "Stella Artois",
+   "ro": "Bună! Aș dori o bere Stella Artois, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Stella Artois, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-timisoreana-nepasteurizata.mp3": {
+   "category": "beer",
+   "name": "Timișoreana Nepasteurizată",
+   "ro": "Bună! Aș dori o bere Timișoreana Nepasteurizată, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Timișoreana Nepasteurizată, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-timisoreana.mp3": {
+   "category": "beer",
+   "name": "Timișoreana",
+   "ro": "Bună! Aș dori o bere Timișoreana, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Timișoreana, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-tuborg.mp3": {
+   "category": "beer",
+   "name": "Tuborg",
+   "ro": "Bună! Aș dori o bere Tuborg, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Tuborg, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ursus-black-grizzly.mp3": {
+   "category": "beer",
+   "name": "Ursus Black Grizzly",
+   "ro": "Bună! Aș dori o bere Ursus Black Grizzly, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ursus Black Grizzly, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ursus-ciresar.mp3": {
+   "category": "beer",
+   "name": "Ursus Cireșar",
+   "ro": "Bună! Aș dori o bere Ursus Cireșar, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ursus Cireșar, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ursus-cooler.mp3": {
+   "category": "beer",
+   "name": "Ursus Cooler",
+   "ro": "Bună! Aș dori o bere Ursus Cooler, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ursus Cooler, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ursus-nefiltrata.mp3": {
+   "category": "beer",
+   "name": "Ursus Nefiltrată",
+   "ro": "Bună! Aș dori o bere Ursus Nefiltrată, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ursus Nefiltrată, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ursus-retro-carpatin.mp3": {
+   "category": "beer",
+   "name": "Ursus Retro Carpatin",
+   "ro": "Bună! Aș dori o bere Ursus Retro Carpatin, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ursus Retro Carpatin, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-ursus.mp3": {
+   "category": "beer",
+   "name": "Ursus",
+   "ro": "Bună! Aș dori o bere Ursus, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Ursus, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-warsteiner.mp3": {
+   "category": "beer",
+   "name": "Warsteiner",
+   "ro": "Bună! Aș dori o bere Warsteiner, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Warsteiner, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-weihenstephaner.mp3": {
+   "category": "beer",
+   "name": "Weihenstephaner",
+   "ro": "Bună! Aș dori o bere Weihenstephaner, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Weihenstephaner, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "beer-zaganu.mp3": {
+   "category": "beer",
+   "name": "Zăganu",
+   "ro": "Bună! Aș dori o bere Zăganu, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Zăganu, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-amaretto-sour.mp3": {
+   "category": "drinks",
+   "name": "Amaretto Sour",
+   "ro": "Bună! Aș dori un Amaretto Sour, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Amaretto Sour, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-americano.mp3": {
+   "category": "drinks",
+   "name": "Americano",
+   "ro": "Bună! Aș dori un Americano, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Americano, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-aperol-spritz.mp3": {
+   "category": "drinks",
+   "name": "Aperol Spritz",
+   "ro": "Bună! Aș dori un Aperol Spritz, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Aperol Spritz, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-bellini.mp3": {
+   "category": "drinks",
+   "name": "Bellini",
+   "ro": "Bună! Aș dori un Bellini, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Bellini, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-black-russian.mp3": {
+   "category": "drinks",
+   "name": "Black Russian",
+   "ro": "Bună! Aș dori un Black Russian, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Black Russian, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-bloody-mary.mp3": {
+   "category": "drinks",
+   "name": "Bloody Mary",
+   "ro": "Bună! Aș dori un Bloody Mary, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Bloody Mary, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-blue-lagoon.mp3": {
+   "category": "drinks",
+   "name": "Blue Lagoon",
+   "ro": "Bună! Aș dori un Blue Lagoon, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Blue Lagoon, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-boulevardier.mp3": {
+   "category": "drinks",
+   "name": "Boulevardier",
+   "ro": "Bună! Aș dori un Boulevardier, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Boulevardier, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-bramble.mp3": {
+   "category": "drinks",
+   "name": "Bramble",
+   "ro": "Bună! Aș dori un Bramble, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Bramble, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-caipirinha.mp3": {
+   "category": "drinks",
+   "name": "Caipirinha",
+   "ro": "Bună! Aș dori un cocktail Caipirinha, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Caipirinha, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-caipiroska.mp3": {
+   "category": "drinks",
+   "name": "Caipiroska",
+   "ro": "Bună! Aș dori un cocktail Caipiroska, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Caipiroska, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-campari-spritz.mp3": {
+   "category": "drinks",
+   "name": "Campari Spritz",
+   "ro": "Bună! Aș dori un Campari Spritz, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Campari Spritz, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-clover-club.mp3": {
+   "category": "drinks",
+   "name": "Clover Club",
+   "ro": "Bună! Aș dori un Clover Club, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Clover Club, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-cosmopolitan.mp3": {
+   "category": "drinks",
+   "name": "Cosmopolitan",
+   "ro": "Bună! Aș dori un Cosmopolitan, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Cosmopolitan, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-cuba-libre.mp3": {
+   "category": "drinks",
+   "name": "Cuba Libre",
+   "ro": "Bună! Aș dori un Cuba Libre, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Cuba Libre, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-daiquiri.mp3": {
+   "category": "drinks",
+   "name": "Daiquiri",
+   "ro": "Bună! Aș dori un Daiquiri, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Daiquiri, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-dark-n-stormy.mp3": {
+   "category": "drinks",
+   "name": "Dark 'n' Stormy",
+   "ro": "Bună! Aș dori un Dark 'n' Stormy, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Dark 'n' Stormy, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-dry-martini.mp3": {
+   "category": "drinks",
+   "name": "Dry Martini",
+   "ro": "Bună! Aș dori un Dry Martini, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Dry Martini, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-espresso-martini.mp3": {
+   "category": "drinks",
+   "name": "Espresso Martini",
+   "ro": "Bună! Aș dori un Espresso Martini, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Espresso Martini, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-french-75.mp3": {
+   "category": "drinks",
+   "name": "French 75",
+   "ro": "Bună! Aș dori un French 75, vă rog.",
+   "da": "Hej! Jeg vil gerne have en French 75, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-gin-basil-smash.mp3": {
+   "category": "drinks",
+   "name": "Gin Basil Smash",
+   "ro": "Bună! Aș dori un Gin Basil Smash, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Gin Basil Smash, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-gin-fizz.mp3": {
+   "category": "drinks",
+   "name": "Gin Fizz",
+   "ro": "Bună! Aș dori un Gin Fizz, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Gin Fizz, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-gin-tonic.mp3": {
+   "category": "drinks",
+   "name": "Gin & Tonic",
+   "ro": "Bună! Aș dori un gin cu tonic, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Gin & Tonic, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-godfather.mp3": {
+   "category": "drinks",
+   "name": "Godfather",
+   "ro": "Bună! Aș dori un Godfather, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Godfather, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-hot-toddy.mp3": {
+   "category": "drinks",
+   "name": "Hot Toddy",
+   "ro": "Bună! Aș dori un Hot Toddy, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Hot Toddy, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-hugo.mp3": {
+   "category": "drinks",
+   "name": "Hugo",
+   "ro": "Bună! Aș dori un Hugo, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Hugo, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-irish-coffee.mp3": {
+   "category": "drinks",
+   "name": "Irish Coffee",
+   "ro": "Bună! Aș dori un Irish Coffee, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Irish Coffee, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-jager-tonic.mp3": {
+   "category": "drinks",
+   "name": "Jäger Tonic",
+   "ro": "Bună! Aș dori un Jäger Tonic, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Jäger Tonic, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-kir-royal.mp3": {
+   "category": "drinks",
+   "name": "Kir Royal",
+   "ro": "Bună! Aș dori un Kir Royal, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Kir Royal, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-limoncello-spritz.mp3": {
+   "category": "drinks",
+   "name": "Limoncello Spritz",
+   "ro": "Bună! Aș dori un Limoncello Spritz, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Limoncello Spritz, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-long-island-iced-tea.mp3": {
+   "category": "drinks",
+   "name": "Long Island Iced Tea",
+   "ro": "Bună! Aș dori un Long Island Iced Tea, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Long Island Iced Tea, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-mai-tai.mp3": {
+   "category": "drinks",
+   "name": "Mai Tai",
+   "ro": "Bună! Aș dori un Mai Tai, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Mai Tai, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-manhattan.mp3": {
+   "category": "drinks",
+   "name": "Manhattan",
+   "ro": "Bună! Aș dori un Manhattan, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Manhattan, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-margarita.mp3": {
+   "category": "drinks",
+   "name": "Margarita",
+   "ro": "Bună! Aș dori un cocktail Margarita, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Margarita, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-mimosa.mp3": {
+   "category": "drinks",
+   "name": "Mimosa",
+   "ro": "Bună! Aș dori un cocktail Mimosa, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Mimosa, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-mint-julep.mp3": {
+   "category": "drinks",
+   "name": "Mint Julep",
+   "ro": "Bună! Aș dori un Mint Julep, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Mint Julep, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-mojito-royale.mp3": {
+   "category": "drinks",
+   "name": "Mojito Royale",
+   "ro": "Bună! Aș dori un Mojito Royale, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Mojito Royale, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-mojito.mp3": {
+   "category": "drinks",
+   "name": "Mojito",
+   "ro": "Bună! Aș dori un Mojito, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Mojito, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-moscow-mule.mp3": {
+   "category": "drinks",
+   "name": "Moscow Mule",
+   "ro": "Bună! Aș dori un Moscow Mule, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Moscow Mule, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-negroni.mp3": {
+   "category": "drinks",
+   "name": "Negroni",
+   "ro": "Bună! Aș dori un Negroni, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Negroni, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-old-fashioned.mp3": {
+   "category": "drinks",
+   "name": "Old Fashioned",
+   "ro": "Bună! Aș dori un Old Fashioned, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Old Fashioned, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-paloma.mp3": {
+   "category": "drinks",
+   "name": "Paloma",
+   "ro": "Bună! Aș dori un cocktail Paloma, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Paloma, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-paper-plane.mp3": {
+   "category": "drinks",
+   "name": "Paper Plane",
+   "ro": "Bună! Aș dori un Paper Plane, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Paper Plane, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-penicillin.mp3": {
+   "category": "drinks",
+   "name": "Penicillin",
+   "ro": "Bună! Aș dori un Penicillin, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Penicillin, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-pina-colada.mp3": {
+   "category": "drinks",
+   "name": "Piña Colada",
+   "ro": "Bună! Aș dori un cocktail Piña Colada, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Piña Colada, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-pisco-sour.mp3": {
+   "category": "drinks",
+   "name": "Pisco Sour",
+   "ro": "Bună! Aș dori un Pisco Sour, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Pisco Sour, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-pornstar-martini.mp3": {
+   "category": "drinks",
+   "name": "Pornstar Martini",
+   "ro": "Bună! Aș dori un Pornstar Martini, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Pornstar Martini, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-rum-ginger.mp3": {
+   "category": "drinks",
+   "name": "Rum & Ginger",
+   "ro": "Bună! Aș dori un rom cu ginger ale, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Rum & Ginger, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-rusty-nail.mp3": {
+   "category": "drinks",
+   "name": "Rusty Nail",
+   "ro": "Bună! Aș dori un Rusty Nail, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Rusty Nail, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-sazerac.mp3": {
+   "category": "drinks",
+   "name": "Sazerac",
+   "ro": "Bună! Aș dori un Sazerac, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Sazerac, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-screwdriver.mp3": {
+   "category": "drinks",
+   "name": "Screwdriver",
+   "ro": "Bună! Aș dori un Screwdriver, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Screwdriver, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-sex-on-the-beach.mp3": {
+   "category": "drinks",
+   "name": "Sex on the Beach",
+   "ro": "Bună! Aș dori un Sex on the Beach, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Sex on the Beach, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-sidecar.mp3": {
+   "category": "drinks",
+   "name": "Sidecar",
+   "ro": "Bună! Aș dori un Sidecar, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Sidecar, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-singapore-sling.mp3": {
+   "category": "drinks",
+   "name": "Singapore Sling",
+   "ro": "Bună! Aș dori un Singapore Sling, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Singapore Sling, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-sprit-wine-soda.mp3": {
+   "category": "drinks",
+   "name": "Șpriț (wine + soda)",
+   "ro": "Bună! Aș dori un Șpriț, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Șpriț (wine + soda), tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-tequila-sunrise.mp3": {
+   "category": "drinks",
+   "name": "Tequila Sunrise",
+   "ro": "Bună! Aș dori un Tequila Sunrise, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Tequila Sunrise, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-tom-collins.mp3": {
+   "category": "drinks",
+   "name": "Tom Collins",
+   "ro": "Bună! Aș dori un Tom Collins, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Tom Collins, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-vin-fiert-mulled-wine.mp3": {
+   "category": "drinks",
+   "name": "Vin fiert (mulled wine)",
+   "ro": "Bună! Aș dori un Vin fiert, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Vin fiert (mulled wine), tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-vodka-red-bull.mp3": {
+   "category": "drinks",
+   "name": "Vodka Red Bull",
+   "ro": "Bună! Aș dori un pahar de vodka cu Red Bull, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Vodka Red Bull, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-vodka-soda-lime.mp3": {
+   "category": "drinks",
+   "name": "Vodka Soda Lime",
+   "ro": "Bună! Aș dori un pahar de vodka cu sifon și lime, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Vodka Soda Lime, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-whiskey-cola.mp3": {
+   "category": "drinks",
+   "name": "Whiskey & Cola",
+   "ro": "Bună! Aș dori un whiskey cu cola, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Whiskey & Cola, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-whiskey-sour.mp3": {
+   "category": "drinks",
+   "name": "Whiskey Sour",
+   "ro": "Bună! Aș dori un Whiskey Sour, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Whiskey Sour, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-white-russian.mp3": {
+   "category": "drinks",
+   "name": "White Russian",
+   "ro": "Bună! Aș dori un White Russian, vă rog.",
+   "da": "Hej! Jeg vil gerne have en White Russian, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "drinks-zombie.mp3": {
+   "category": "drinks",
+   "name": "Zombie",
+   "ro": "Bună! Aș dori un Zombie, vă rog.",
+   "da": "Hej! Jeg vil gerne have en Zombie, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-absinth.mp3": {
+   "category": "shots",
+   "name": "Absinth",
+   "ro": "Bună! Aș dori un shot de absint, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Absinth, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-afinata.mp3": {
+   "category": "shots",
+   "name": "Afinată",
+   "ro": "Bună! Aș dori un shot de Afinată, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Afinată, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-alabama-slammer.mp3": {
+   "category": "shots",
+   "name": "Alabama Slammer",
+   "ro": "Bună! Aș dori un shot de Alabama Slammer, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Alabama Slammer, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-alexandrion.mp3": {
+   "category": "shots",
+   "name": "Alexandrion",
+   "ro": "Bună! Aș dori un shot de Alexandrion, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Alexandrion, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-amaretto.mp3": {
+   "category": "shots",
+   "name": "Amaretto",
+   "ro": "Bună! Aș dori un shot de Amaretto, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Amaretto, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-aquavit.mp3": {
+   "category": "shots",
+   "name": "Aquavit",
+   "ro": "Bună! Aș dori un shot de Aquavit, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Aquavit, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-b-52.mp3": {
+   "category": "shots",
+   "name": "B-52",
+   "ro": "Bună! Aș dori un shot de B-52, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot B-52, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-baby-guinness.mp3": {
+   "category": "shots",
+   "name": "Baby Guinness",
+   "ro": "Bună! Aș dori un shot de Baby Guinness, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Baby Guinness, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-bacardi.mp3": {
+   "category": "shots",
+   "name": "Bacardi",
+   "ro": "Bună! Aș dori un shot de Bacardi, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Bacardi, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-baileys.mp3": {
+   "category": "shots",
+   "name": "Baileys",
+   "ro": "Bună! Aș dori un shot de Baileys, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Baileys, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-becherovka.mp3": {
+   "category": "shots",
+   "name": "Becherovka",
+   "ro": "Bună! Aș dori un shot de Becherovka, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Becherovka, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-brain-hemorrhage.mp3": {
+   "category": "shots",
+   "name": "Brain Hemorrhage",
+   "ro": "Bună! Aș dori un shot de Brain Hemorrhage, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Brain Hemorrhage, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-captain-morgan.mp3": {
+   "category": "shots",
+   "name": "Captain Morgan",
+   "ro": "Bună! Aș dori un shot de Captain Morgan, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Captain Morgan, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-cognac.mp3": {
+   "category": "shots",
+   "name": "Cognac",
+   "ro": "Bună! Aș dori un shot de coniac, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Cognac, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-cointreau.mp3": {
+   "category": "shots",
+   "name": "Cointreau",
+   "ro": "Bună! Aș dori un shot de Cointreau, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Cointreau, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-duck-fart.mp3": {
+   "category": "shots",
+   "name": "Duck Fart",
+   "ro": "Bună! Aș dori un shot de Duck Fart, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Duck Fart, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-fernet-branca.mp3": {
+   "category": "shots",
+   "name": "Fernet-Branca",
+   "ro": "Bună! Aș dori un shot de Fernet-Branca, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Fernet-Branca, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-fireball.mp3": {
+   "category": "shots",
+   "name": "Fireball",
+   "ro": "Bună! Aș dori un shot de Fireball, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Fireball, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-flaming-sambuca.mp3": {
+   "category": "shots",
+   "name": "Flaming Sambuca",
+   "ro": "Bună! Aș dori un shot de Flaming Sambuca, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Flaming Sambuca, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-gin.mp3": {
+   "category": "shots",
+   "name": "Gin",
+   "ro": "Bună! Aș dori un shot de Gin, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Gin, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-grappa.mp3": {
+   "category": "shots",
+   "name": "Grappa",
+   "ro": "Bună! Aș dori un shot de Grappa, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Grappa, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-green-chartreuse.mp3": {
+   "category": "shots",
+   "name": "Green Chartreuse",
+   "ro": "Bună! Aș dori un shot de Green Chartreuse, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Green Chartreuse, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-green-tea-shot.mp3": {
+   "category": "shots",
+   "name": "Green Tea Shot",
+   "ro": "Bună! Aș dori un shot de Green Tea, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Green Tea Shot, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-havana-club.mp3": {
+   "category": "shots",
+   "name": "Havana Club",
+   "ro": "Bună! Aș dori un shot de Havana Club, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Havana Club, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-horinca.mp3": {
+   "category": "shots",
+   "name": "Horincă",
+   "ro": "Bună! Aș dori un shot de Horincă, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Horincă, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-jack-daniels.mp3": {
+   "category": "shots",
+   "name": "Jack Daniel's",
+   "ro": "Bună! Aș dori un shot de Jack Daniel's, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Jack Daniel's, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-jagerbomb.mp3": {
+   "category": "shots",
+   "name": "Jägerbomb",
+   "ro": "Bună! Aș dori un shot de Jägerbomb, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Jägerbomb, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-jagermeister.mp3": {
+   "category": "shots",
+   "name": "Jägermeister",
+   "ro": "Bună! Aș dori un shot de Jägermeister, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Jägermeister, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-jim-beam.mp3": {
+   "category": "shots",
+   "name": "Jim Beam",
+   "ro": "Bună! Aș dori un shot de Jim Beam, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Jim Beam, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-kahlua.mp3": {
+   "category": "shots",
+   "name": "Kahlúa",
+   "ro": "Bună! Aș dori un shot de Kahlúa, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Kahlúa, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-kamikaze.mp3": {
+   "category": "shots",
+   "name": "Kamikaze",
+   "ro": "Bună! Aș dori un shot de Kamikaze, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Kamikaze, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-lemon-drop.mp3": {
+   "category": "shots",
+   "name": "Lemon Drop",
+   "ro": "Bună! Aș dori un shot de Lemon Drop, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Lemon Drop, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-licor-43.mp3": {
+   "category": "shots",
+   "name": "Licor 43",
+   "ro": "Bună! Aș dori un shot de Licor 43, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Licor 43, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-limoncello.mp3": {
+   "category": "shots",
+   "name": "Limoncello",
+   "ro": "Bună! Aș dori un shot de Limoncello, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Limoncello, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-malibu.mp3": {
+   "category": "shots",
+   "name": "Malibu",
+   "ro": "Bună! Aș dori un shot de Malibu, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Malibu, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-metaxa.mp3": {
+   "category": "shots",
+   "name": "Metaxa",
+   "ro": "Bună! Aș dori un shot de Metaxa, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Metaxa, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-mexican-flag.mp3": {
+   "category": "shots",
+   "name": "Mexican Flag",
+   "ro": "Bună! Aș dori un shot de Mexican Flag, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Mexican Flag, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-mezcal.mp3": {
+   "category": "shots",
+   "name": "Mezcal",
+   "ro": "Bună! Aș dori un shot de Mezcal, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Mezcal, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-mind-eraser.mp3": {
+   "category": "shots",
+   "name": "Mind Eraser",
+   "ro": "Bună! Aș dori un shot de Mind Eraser, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Mind Eraser, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-oatmeal-cookie.mp3": {
+   "category": "shots",
+   "name": "Oatmeal Cookie",
+   "ro": "Bună! Aș dori un shot de Oatmeal Cookie, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Oatmeal Cookie, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-ouzo.mp3": {
+   "category": "shots",
+   "name": "Ouzo",
+   "ro": "Bună! Aș dori un shot de Ouzo, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Ouzo, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-palinca.mp3": {
+   "category": "shots",
+   "name": "Pălincă",
+   "ro": "Bună! Aș dori un shot de Pălincă, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Pălincă, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-pickleback.mp3": {
+   "category": "shots",
+   "name": "Pickleback",
+   "ro": "Bună! Aș dori un shot de Pickleback, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Pickleback, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-rachiu.mp3": {
+   "category": "shots",
+   "name": "Rachiu",
+   "ro": "Bună! Aș dori un shot de Rachiu, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Rachiu, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-rakija.mp3": {
+   "category": "shots",
+   "name": "Rakija",
+   "ro": "Bună! Aș dori un shot de Rakija, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Rakija, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-sambuca.mp3": {
+   "category": "shots",
+   "name": "Sambuca",
+   "ro": "Bună! Aș dori un shot de Sambuca, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Sambuca, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-slippery-nipple.mp3": {
+   "category": "shots",
+   "name": "Slippery Nipple",
+   "ro": "Bună! Aș dori un shot de Slippery Nipple, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Slippery Nipple, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-slivovitz.mp3": {
+   "category": "shots",
+   "name": "Slivovitz",
+   "ro": "Bună! Aș dori un shot de Slivovitz, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Slivovitz, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-sourz.mp3": {
+   "category": "shots",
+   "name": "Sourz",
+   "ro": "Bună! Aș dori un shot de Sourz, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Sourz, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-southern-comfort.mp3": {
+   "category": "shots",
+   "name": "Southern Comfort",
+   "ro": "Bună! Aș dori un shot de Southern Comfort, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Southern Comfort, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-tequila-gold.mp3": {
+   "category": "shots",
+   "name": "Tequila Gold",
+   "ro": "Bună! Aș dori un shot de Tequila Gold, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Tequila Gold, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-tequila-salt-lime.mp3": {
+   "category": "shots",
+   "name": "Tequila (salt & lime)",
+   "ro": "Bună! Aș dori un shot de Tequila, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Tequila (salt & lime), tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-tequila-slammer.mp3": {
+   "category": "shots",
+   "name": "Tequila Slammer",
+   "ro": "Bună! Aș dori un shot de Tequila Slammer, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Tequila Slammer, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-tuica.mp3": {
+   "category": "shots",
+   "name": "Țuică",
+   "ro": "Bună! Aș dori un shot de Țuică, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Țuică, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-unicum.mp3": {
+   "category": "shots",
+   "name": "Unicum",
+   "ro": "Bună! Aș dori un shot de Unicum, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Unicum, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-visinata.mp3": {
+   "category": "shots",
+   "name": "Vișinată",
+   "ro": "Bună! Aș dori un shot de Vișinată, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Vișinată, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-vodka.mp3": {
+   "category": "shots",
+   "name": "Vodka",
+   "ro": "Bună! Aș dori un shot de Vodka, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Vodka, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-washington-apple.mp3": {
+   "category": "shots",
+   "name": "Washington Apple",
+   "ro": "Bună! Aș dori un shot de Washington Apple, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Washington Apple, tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  },
+  "shots-whiskey-jameson.mp3": {
+   "category": "shots",
+   "name": "Whiskey (Jameson)",
+   "ro": "Bună! Aș dori un shot de whiskey Jameson, vă rog.",
+   "da": "Hej! Jeg vil gerne have en shot Whiskey (Jameson), tak.",
+   "voice": "ro-RO-EmilNeural",
+   "rate": "-5%"
+  }
+ }
+}

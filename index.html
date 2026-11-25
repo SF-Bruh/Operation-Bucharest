@@ -306,6 +306,39 @@
     .sheet-overlay.show .sheet > :nth-child(3) { animation-delay: .16s; }
     .sheet-overlay.show .sheet > :nth-child(4) { animation-delay: .22s; }
     .sheet-overlay.show .sheet > :nth-child(5) { animation-delay: .28s; }
+    .sheet-overlay.show .sheet > :nth-child(6) { animation-delay: .32s; }
+
+    /* ── "Bestil på rumænsk": a quiet button on the result sheet, and a bright card to show the bartender ── */
+    .btn.outline { color: var(--amber-hi); background: rgba(255,140,50,.06); box-shadow: inset 0 0 0 var(--hair) rgba(255,154,61,.65); }
+    .btn.outline:active { background: rgba(255,140,50,.13); }
+    .ro-open { min-height: 52px; margin-bottom: 10px; letter-spacing: .1em; font-stretch: 106%; }
+    .ro-open > span:first-child { white-space: nowrap; }
+    .ro-flag { font-size: 1.25em; letter-spacing: 0; margin-right: .55em; vertical-align: -.08em; }
+    .ro-view {
+      position: fixed; inset: 0; z-index: 800; display: flex; flex-direction: column;
+      padding: calc(env(safe-area-inset-top) + 16px) calc(var(--pad) + env(safe-area-inset-right)) calc(env(safe-area-inset-bottom) + 16px) calc(var(--pad) + env(safe-area-inset-left));
+      background: #fbf7ef; color: #0b0907; opacity: 0; transition: opacity .22s ease;
+    }
+    .ro-view.show { opacity: 1; }
+    .ro-view:focus { outline: none; }
+    .ro-top { flex: none; display: flex; align-items: center; min-height: 28px; font: 600 11px/1.2 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: #5b534a; }
+    .ro-top .ro-flag { font-size: 20px; }
+    .ro-main { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 18px; padding: 12px 0; overflow: hidden; }
+    .ro-text { font-family: var(--f-wide); font-weight: 700; font-stretch: 100%; font-size: 40px; line-height: 1.12; letter-spacing: -.008em; color: #0b0907; overflow: hidden; }
+    .ro-text.squeeze { overflow-wrap: anywhere; }
+    .ro-da { flex: none; font-size: 15px; line-height: 1.4; color: #4f483f; }
+    .ro-hint { flex: none; margin: 0 0 10px; text-align: center; font: 600 12px/1.4 var(--f-wide); color: #8a3412; }
+    .ro-btns { flex: none; display: flex; gap: 10px; }
+    .ro-btns button {
+      flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 60px; padding: 0 10px;
+      border: 0; border-radius: 4px; cursor: pointer; font: 700 14px/1 var(--f-wide); letter-spacing: .07em; text-transform: uppercase; white-space: nowrap;
+      -webkit-appearance: none; appearance: none; transition: transform .2s var(--ease);
+    }
+    .ro-btns button:active { transform: scale(.97); }
+    .ro-btns button:focus-visible { outline: 2px solid #b8541a; outline-offset: 3px; }
+    .ro-btns svg { width: 16px; height: 16px; flex: none; }
+    .ro-play { flex: 1.55; background: #0b0907; color: #fbf7ef; }
+    .ro-close { background: transparent; color: #0b0907; box-shadow: inset 0 0 0 2px #0b0907; }
 
     .toast {
       position: fixed; left: 50%; top: calc(env(safe-area-inset-top) + 56px); z-index: 700; pointer-events: none;
@@ -402,6 +435,7 @@
       .stage.won .flash { animation: none; }
       #wheel { transition: none; }
       .greet { transition: none; }
+      .ro-view { transition: none; }
     }
   </style>
 </head>
@@ -531,6 +565,7 @@
       <p class="res-who" id="resWho"></p>
       <h2 class="res-label" id="resLabel"></h2>
       <p class="res-cat mono" id="resCat"></p>
+      <button class="btn outline ro-open" id="roBtn"><span><span class="ro-flag" aria-hidden="true">🇷🇴</span>Bestil på rumænsk</span><span class="arr" aria-hidden="true">→</span></button>
       <div class="result-btn-row">
         <button class="btn primary" id="againBtn"><span>Spin igen</span><span class="arr" aria-hidden="true">↻</span></button>
         <button class="sq" id="shareBtn" aria-label="Del resultat">
@@ -540,6 +575,21 @@
     </div>
   </div>
   <p class="sr" id="live" aria-live="assertive"></p>
+
+  <!-- Order in Romanian: a card to show the bartender, read aloud (audio/ro, made by tools/make_ro_audio.py) -->
+  <div class="ro-view" id="roView" role="dialog" aria-modal="true" aria-labelledby="roText" aria-describedby="roDa" tabindex="-1" hidden>
+    <div class="ro-top"><span class="ro-flag" aria-hidden="true">🇷🇴</span>Vis til bartenderen</div>
+    <div class="ro-main" id="roMain">
+      <p class="ro-text" id="roText" lang="ro"></p>
+      <p class="ro-da" id="roDa" lang="da"></p>
+    </div>
+    <p class="ro-hint" id="roHint" role="status" hidden>Slå lydløs fra for at høre den</p>
+    <div class="ro-btns">
+      <button class="ro-play" id="roPlay"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.8v12.4L13.6 8z" fill="currentColor"/></svg>Afspil igen</button>
+      <button class="ro-close" id="roClose">Luk</button>
+    </div>
+    <audio id="roAudio" preload="none"></audio>
+  </div>
 
   <!-- Greeting video: after a typed code, once per tab, cannot be skipped. Decrypted with the code (assets/greeting). -->
   <div class="greet" id="greet" role="dialog" aria-modal="true" aria-label="Velkomstvideo" tabindex="-1" hidden>
@@ -571,12 +621,32 @@
     function rand() { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] / 4294967296; }
 
     // ── Menu (menu.js): one pool per category; "Fuck it" is a mode that uses all of them ──
-    const item = x => typeof x === 'string' ? { name: x, wheel: x } : { name: String(x.name), wheel: String(x.wheel || x.name) };
+    const item = x => typeof x === 'string' ? { name: x, wheel: x, ro: '' } : { name: String(x.name), wheel: String(x.wheel || x.name), ro: x.ro ? String(x.ro) : '' };
     const MODES = (M && Array.isArray(M.modes) ? M.modes : []).map(m => {
       const items = (m.items || []).map(item);
-      return { id: String(m.id), name: String(m.name), items, sub: `${items.length} ${String(m.unit || '')}`.trim() };   // "75 mærker"
+      const order = m.order && m.order.ro ? { ro: String(m.order.ro), da: String(m.order.da || '') } : null;   // "Bestil på rumænsk"
+      return { id: String(m.id), name: String(m.name), items, order, sub: `${items.length} ${String(m.unit || '')}`.trim() };   // "75 mærker"
     });
     const FUCKIT = { id: 'fuckit', name: 'Fuck it' };
+
+    // "Bestil på rumænsk": the sentence for an item and its sound file. Same rules as tools/make_ro_audio.py, which
+    // makes the files: {item} in Romanian is the item's own ro text, or its name without "(…)" with " & " → " cu "
+    // (lower case: "gin cu tonic"); in Danish it is the full name. The file is audio/ro/{category}-{slug of name}.mp3.
+    const SLUG_LETTERS = { 'ß': 'ss', 'ø': 'o', 'Ø': 'o', 'æ': 'ae', 'Æ': 'ae', 'œ': 'oe', 'Œ': 'oe', 'ł': 'l', 'Ł': 'l', 'đ': 'd', 'Đ': 'd', 'ı': 'i' };
+    const squish = s => String(s).replace(/\s+/g, ' ').trim();
+    const slugOf = s => [...s].map(c => SLUG_LETTERS[c] || c).join('').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+      .replace(/['’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    function roItem(x) {
+      if (x.ro) return squish(x.ro);
+      let s = x.name.replace(/\s*\([^)]*\)/g, '');
+      if (s.includes(' & ')) s = s.split(' & ').join(' cu ').toLowerCase();
+      return squish(s);
+    }
+    function orderPhrase(m, x) {                                          // → { ro, da, src } or null
+      if (!m || !m.order || !x) return null;
+      const name = squish(x.name);
+      return { ro: m.order.ro.split('{item}').join(roItem(x)), da: m.order.da.split('{item}').join(name), src: `audio/ro/${m.id}-${slugOf(name)}.mp3` };
+    }
     const PEOPLE = (M && M.people) || 5;
     const PER = Math.max(2, Math.min(16, Math.round(Number(M && M.perWheel)) || 12));   // slices per wheel
     const catItems = () => MODES.map(m => ({ name: m.name, wheel: m.name }));
@@ -933,8 +1003,13 @@
         clipStop() {                                               // a new spin: cut the clip short, with a quick fade
           if (!clip || !ctx) return;
           const t = ctx.currentTime, c = clip; clip = null;
-          c.g.gain.cancelScheduledValues(t); c.g.gain.setValueAtTime(c.gain, t); c.g.gain.setTargetAtTime(.0001, t, .03);
+          c.g.gain.cancelScheduledValues(t); c.g.gain.setValueAtTime(c.g.gain.value, t); c.g.gain.setTargetAtTime(.0001, t, .03);
           c.srcs.forEach(s => { try { s.stop(t + .2); } catch (e) {} });
+        },
+        duck(down) {                                               // "Bestil på rumænsk" speaks: a clip steps back, then returns
+          if (!clip || !ctx) return;                               // (it is not stopped: only a new spin does that)
+          const t = ctx.currentTime, g = clip.g.gain;
+          g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.setTargetAtTime(down ? clip.gain * .12 : clip.gain, t, .06);
         },
         unlock() {
           if (!live()) return;
@@ -1311,7 +1386,7 @@
       const sound = resultSound(places[idx].name, cat.id);         // a clip instead of the chord: see resultSound
       if (sound === 'win') SFX.win(); else SFX.clip(sound);
       haptic([20, 40, 20]);
-      lastResult = { idx, n: N, place: places[idx], cat: cat.name, fk };
+      lastResult = { idx, n: N, place: places[idx], cat: cat.name, catId: cat.id, fk };   // Fuck it: the category it landed on
       remember(cat.id, places[idx].name);
       recent.unshift(`${places[idx].name} (${cat.name})`); if (recent.length > 3) recent.pop();
       renderRecent();
@@ -1327,15 +1402,125 @@
       $('resWho').textContent = `${player.n}, du skal bestille`;
       $('resLabel').textContent = r.place.name;
       $('resCat').textContent = r.fk ? `Fuck it → ${r.cat}` : r.cat;
+      $('roBtn').hidden = !resultPhrase();
       $('resultOverlay').classList.add('show');
       $('live').textContent = `${player.n}, du skal bestille ${r.place.name}`;
       setTimeout(() => { try { $('againBtn').focus({ preventScroll: true }); } catch (e) {} }, 400);
     }
     function closeResult(reset = true) {
       clearTimeout(resultTimer); resultTimer = 0;
+      RO.close();
       $('resultOverlay').classList.remove('show');
       if (reset && !busy) { highlight = -1; stage.classList.remove('won'); drawWheel(); }
     }
+    const resultPhrase = () => lastResult && orderPhrase(MODES.find(m => m.id === lastResult.catId), lastResult.place);
+
+    // ── "Bestil på rumænsk": a bright card for the bartender, and the sentence read aloud ──
+    // Sound: the MP3 in audio/ro (fetched only now). If it cannot be played: the phone's own Romanian voice, if it has
+    // one. If neither: just the text. Never an error. A Daiquiri/voice clip still playing steps back while it speaks.
+    const RO = (() => {
+      const view = $('roView'), audio = $('roAudio'), hint = $('roHint'), text = $('roText'), da = $('roDa'), main = $('roMain');
+      const IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      const synth = 'speechSynthesis' in window ? window.speechSynthesis : null;
+      let cur = null, token = 0, back = null, inertBefore = false;
+      try { if (synth) synth.getVoices(); } catch (e) {}                       // some browsers fill the list a moment later
+      const roVoice = () => { try { return synth && synth.getVoices().find(v => /^ro([-_]|$)/i.test(v.lang)) || null; } catch (e) { return null; } };
+
+      function quiet() {
+        try { audio.pause(); } catch (e) {}
+        try { if (synth) synth.cancel(); } catch (e) {}
+        SFX.duck(false);
+      }
+      function speak(my) {                                                     // the phone's own Romanian voice
+        const v = roVoice(); if (!v || !cur) return;
+        try {
+          const u = new SpeechSynthesisUtterance(cur.ro);
+          u.lang = 'ro-RO'; u.rate = .92;
+          try { u.voice = v; } catch (e) {}                                    // else the phone picks by language
+          u.onend = u.onerror = () => { if (my === token) SFX.duck(false); };
+          synth.cancel(); SFX.duck(true); synth.speak(u);
+          if (IOS) hint.hidden = false;                                        // the silent switch can mute this voice
+        } catch (e) { SFX.duck(false); }
+      }
+      function play() {
+        if (!cur) return;
+        const my = ++token, c = cur;
+        quiet(); hint.hidden = true;
+        if (c.failed) { speak(my); return; }                                   // the file did not play before: straight to the voice
+        let started = false, gaveUp = false;
+        const giveUp = () => {
+          if (started || gaveUp || my !== token) return;
+          gaveUp = true; c.failed = true; clearTimeout(slow);
+          try { audio.pause(); } catch (e) {}
+          SFX.duck(false); speak(my);
+        };
+        const slow = setTimeout(giveUp, 6000);                                 // nothing after 6 s (bad network)
+        audio.onplaying = () => { if (my === token) { started = true; clearTimeout(slow); } };
+        audio.onended = () => { if (my === token) SFX.duck(false); };
+        audio.onerror = giveUp;
+        if (audio.getAttribute('src') !== c.src) audio.src = c.src;
+        try { audio.currentTime = 0; } catch (e) {}
+        SFX.duck(true);
+        const p = audio.play();
+        if (p && p.catch) p.catch(err => {
+          if (my !== token) return;
+          if (err && err.name === 'NotAllowedError') { clearTimeout(slow); SFX.duck(false); return; }   // needs a tap: ▶ is right there
+          if (err && err.name === 'AbortError') return;
+          giveUp();
+        });
+      }
+      // The Romanian sentence as big as it goes: whole words on a line, nothing cut off
+      function fit() {
+        if (view.hidden) return;
+        const room = () => main.clientHeight - da.offsetHeight - 18 - 24;     // minus the Danish line, the gap and padding
+        const fits = fs => { text.style.fontSize = fs + 'px'; return text.scrollWidth <= text.clientWidth + 1 && text.scrollHeight <= room(); };
+        text.classList.remove('squeeze');
+        let lo = 20, hi = 84;
+        if (!fits(lo)) { text.classList.add('squeeze'); fits(lo); return; }
+        while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (fits(mid)) lo = mid; else hi = mid; }
+        fits(lo);
+      }
+      function onKey(e) {
+        if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); close(); }
+        else if (e.key === 'Tab') {                                            // focus stays on the card
+          const a = $('roPlay'), b = $('roClose');
+          e.preventDefault(); (document.activeElement === a ? b : a).focus();
+        }
+      }
+      function open(ph) {
+        if (!ph) return;
+        cur = { ...ph, failed: false };
+        text.textContent = ph.ro; da.textContent = ph.da; hint.hidden = true;
+        back = document.activeElement;
+        inertBefore = $('screens').inert;
+        view.hidden = false; $('resultOverlay').inert = true; $('screens').inert = true;
+        document.addEventListener('keydown', onKey, true);
+        play();                                                                // still inside the tap, so phones allow sound
+        fit();
+        requestAnimationFrame(() => { fit(); view.classList.add('show'); try { view.focus({ preventScroll: true }); } catch (e) {} });
+        haptic(10);
+      }
+      function close() {
+        if (view.hidden) return;
+        token++; quiet(); cur = null;
+        view.classList.remove('show'); view.hidden = true;
+        $('resultOverlay').inert = false; $('screens').inert = inertBefore;
+        document.removeEventListener('keydown', onKey, true);
+        try { if (back && back.focus) back.focus({ preventScroll: true }); } catch (e) {}
+      }
+      $('roPlay').onclick = () => { haptic(); play(); };
+      $('roClose').onclick = close;
+      window.addEventListener('resize', fit);
+      return { open, close, fit, get isOpen() { return !view.hidden; } };
+    })();
+    window.OB_RO = {                                                      // console: OB_RO.list() · OB_RO.open('drinks', 'Gin & Tonic')
+      list() {
+        const out = [];
+        for (const m of MODES) for (const x of m.items) { const p = orderPhrase(m, x); if (p) out.push({ category: m.id, name: x.name, file: p.src, ro: p.ro, da: p.da }); }
+        return out;
+      },
+      open(cat, name) { const m = MODES.find(x => x.id === cat), x = m && m.items.find(i => i.name === name); RO.open(orderPhrase(m, x)); return !!x; }
+    };
 
     let toastTimer = 0;
     function toast(msg, ms = 2600) {
@@ -1521,7 +1706,8 @@
     $('againBtn').onclick = () => { haptic(); spin(); };
     $$('.js-lock').forEach(b => { b.onclick = lock; });
     $('resultOverlay').addEventListener('click', e => { if (e.target === $('resultOverlay')) closeResult(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('resultOverlay').classList.contains('show')) closeResult(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('resultOverlay').classList.contains('show') && !RO.isOpen) closeResult(); });
+    $('roBtn').onclick = () => RO.open(resultPhrase());
     $('shareBtn').onclick = async () => {
       haptic();
       if (!lastResult || !player) return;
